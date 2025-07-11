@@ -92,3 +92,39 @@
 
 </body>
 </html>
+<!-- Firebase CDN -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+
+<script>
+  // Your Firebase project config
+  const firebaseConfig = {
+    apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YcAv3X5Qv30nU",
+    authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+    projectId: "flippinbargains-e8a8a",
+    storageBucket: "flippinbargains-e8a8a.appspot.com",
+    messagingSenderId: "920267203424",
+    appId: "1:920267203424:web:2a3c47209698095e9bb405"
+  };
+
+  // Initialize Firebase
+  const app = firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+
+  // Form submit handler
+  document.querySelector("form").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const email = document.querySelector("input[type='email']").value;
+    const password = document.querySelector("input[type='password']").value;
+
+    auth.createUserWithEmailAndPassword(email, password)
+      .then((userCredential) => {
+        alert("Account created! Redirecting...");
+        window.location.href = "dashboard.html";
+      })
+      .catch((error) => {
+        alert("Error: " + error.message);
+      });
+  });
+</script>
