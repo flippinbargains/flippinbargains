@@ -1,57 +1,94 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <title>Register</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register</title>
   <style>
-    body { font-family: Arial, sans-serif; padding: 20px; }
-    form { max-width: 300px; margin: auto; }
-    input, button { width: 100%; padding: 10px; margin: 10px 0; }
+    body {
+      font-family: Arial, sans-serif;
+      padding: 40px;
+      background: #f5f5f5;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      margin-bottom: 20px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+    }
+    button {
+      width: 100%;
+      padding: 10px;
+      background: #28a745;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 10px;
+    }
   </style>
 </head>
 <body>
-  <h2>Register</h2>
+
   <form id="registerForm">
+    <h2>Register</h2>
     <input type="text" id="username" placeholder="Your username" required />
     <input type="email" id="email" placeholder="you@example.com" required />
     <input type="password" id="password" placeholder="Password" required />
+    <div class="error" id="errorText"></div>
     <button type="submit">Create Account</button>
+    <p>Already have an account? <a href="login.html">Login</a></p>
   </form>
 
   <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-  <script>
-    // Your Firebase config
     const firebaseConfig = {
       apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8Y...",
       authDomain: "flippinbargains-e8a8a.firebaseapp.com",
       projectId: "flippinbargains-e8a8a",
       storageBucket: "flippinbargains-e8a8a.appspot.com",
       messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:66518b776...",
+      appId: "1:920267203424:web:d793dd511...",
       measurementId: "G-YJTLS8NRS4"
     };
 
-    firebase.initializeApp(firebaseConfig);
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
 
-    // Handle form submission
-    document.getElementById("registerForm").addEventListener("submit", function (e) {
+    document.getElementById("registerForm").addEventListener("submit", (e) => {
       e.preventDefault();
+
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
+      const username = document.getElementById("username").value;
 
-      firebase.auth().createUserWithEmailAndPassword(email, password)
+      createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
-          alert("Account created!");
+          alert("Registration successful!");
           window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          alert("Error: " + error.message);
+          document.getElementById("errorText").textContent = error.message;
         });
     });
   </script>
+
 </body>
 </html>
