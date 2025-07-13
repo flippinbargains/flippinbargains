@@ -8,37 +8,37 @@
 <body>
   <h1>Register</h1>
   <form id="registerForm">
-    <input type="text" id="username" placeholder="Username" required />
-    <input type="email" id="email" placeholder="Email" required />
-    <input type="password" id="password" placeholder="Password" required />
+    <input type="text" id="username" placeholder="Username" required /><br />
+    <input type="email" id="email" placeholder="Email" required /><br />
+    <input type="password" id="password" placeholder="Password" required /><br />
     <button type="submit">Create Account</button>
-    <p>Already have an account? <a href="login.html">Login</a></p>
-    <p id="error" style="color:red;"></p>
   </form>
+  <p>Already have an account? <a href="login.html">Login</a></p>
+  <p id="error" style="color: red;"></p>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase App & Auth SDKs -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
+    // Your Firebase config (copied from your screenshot)
     const firebaseConfig = {
-      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8Y9Zq8gl3eVGIk",
-      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-      projectId: "flippinbargains-e8a8a",
-      storageBucket: "flippinbargains-e8a8a.appspot.com",
+      apiKey: "AIzaSyCn2yB_oVrb-st1uB27LCTDgrQAjxd1e4k",
+      authDomain: "flippinbargains-e8e38.firebaseapp.com",
+      projectId: "flippinbargains-e8e38",
+      storageBucket: "flippinbargains-e8e38.appspot.com",
       messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:2a3c47209698095e9bb405",
-      measurementId: "G-03GDHRHR7P"
+      appId: "1:920267203424:web:d79edc03a5efb7265e9bb405",
+      measurementId: "G-03GDHRHSM5"
     };
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
 
-    document.getElementById("registerForm").addEventListener("submit", (e) => {
+    document.getElementById("registerForm").addEventListener("submit", function (e) {
       e.preventDefault();
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
-      const username = document.getElementById("username").value;
 
       createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential) => {
@@ -46,7 +46,7 @@
           window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          document.getElementById("error").textContent = error.message;
+          document.getElementById("error").innerText = "Error: " + error.message;
         });
     });
   </script>
