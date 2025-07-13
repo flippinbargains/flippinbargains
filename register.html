@@ -1,76 +1,41 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Register</title>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 40px;
-      background: #f5f5f5;
-    }
-    form {
-      max-width: 400px;
-      margin: auto;
-      background: white;
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 10px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
-    }
-    button {
-      width: 100%;
-      padding: 10px;
-      background: #28a745;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      font-size: 16px;
-    }
-    .error {
-      color: red;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register</title>
 </head>
 <body>
-
+  <h1>Register</h1>
   <form id="registerForm">
-    <h2>Register</h2>
-    <input type="text" id="username" placeholder="Your username" required />
-    <input type="email" id="email" placeholder="you@example.com" required />
+    <input type="text" id="username" placeholder="Username" required />
+    <input type="email" id="email" placeholder="Email" required />
     <input type="password" id="password" placeholder="Password" required />
-    <div class="error" id="errorText"></div>
     <button type="submit">Create Account</button>
     <p>Already have an account? <a href="login.html">Login</a></p>
+    <p id="error" style="color:red;"></p>
   </form>
 
-  <!-- Firebase SDKs -->
+  <!-- Firebase SDK -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "htts-e8a8a",
-      storageBucket: 
-const firebaseConfig = {
-  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8Y9Zq8gl3eVGIk",
-  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-  projectId: "flippinbargains-e8a8a",
-  storageBucket: "flippinbargains-e8a8a.appspot.com",
-  messagingSenderId: "920267203424",
-  appId: "1:920267203424:web:2a3c47209698095e9bb405",
-  measurementId: "G-03GDHRHR7P"
-};
+    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8Y9Zq8gl3eVGIk",
+      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+      projectId: "flippinbargains-e8a8a",
+      storageBucket: "flippinbargains-e8a8a.appspot.com",
+      messagingSenderId: "920267203424",
+      appId: "1:920267203424:web:2a3c47209698095e9bb405",
+      measurementId: "G-03GDHRHR7P"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
     document.getElementById("registerForm").addEventListener("submit", (e) => {
       e.preventDefault();
-
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
       const username = document.getElementById("username").value;
@@ -81,46 +46,9 @@ const firebaseConfig = {
           window.location.href = "dashboard.html";
         })
         .catch((error) => {
-          document.getElementById("errorText").textContent = error.message;
+          document.getElementById("error").textContent = error.message;
         });
     });
   </script>
-
 </body>
 </html>
-<!-- Firebase CDN -->
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
-
-<script>
-  // Your Firebase project config
-  const firebaseConfig = {
-    apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YcAv3X5Qv30nU",
-    authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-    projectId: "flippinbargains-e8a8a",
-    storageBucket: "flippinbargains-e8a8a.appspot.com",
-    messagingSenderId: "920267203424",
-    appId: "1:920267203424:web:2a3c47209698095e9bb405"
-  };
-
-  // Initialize Firebase
-  const app = firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-
-  // Form submit handler
-  document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const email = document.querySelector("input[type='email']").value;
-    const password = document.querySelector("input[type='password']").value;
-
-    auth.createUserWithEmailAndPassword(email, password)
-      .then((userCredential) => {
-        alert("Account created! Redirecting...");
-        window.location.href = "dashboard.html";
-      })
-      .catch((error) => {
-        alert("Error: " + error.message);
-      });
-  });
-</script>
