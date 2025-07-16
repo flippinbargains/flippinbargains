@@ -18,6 +18,12 @@
       border-radius: 6px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
+    .product img {
+      max-width: 100%;
+      height: auto;
+      border-radius: 4px;
+      margin-bottom: 10px;
+    }
     h2 {
       margin-top: 0;
     }
@@ -45,6 +51,7 @@
         const item = document.createElement("div");
         item.className = "product";
         item.innerHTML = `
+          ${data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.title}" />` : ''}
           <h2>${data.title}</h2>
           <p><strong>Price:</strong> $${data.price}</p>
           <p>${data.description}</p>
