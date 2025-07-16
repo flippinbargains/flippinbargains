@@ -1,84 +1,76 @@
-<!DOCTYPE html><html>
+<!DOCTYPE html><html lang="en">
 <head>
-  <title>Dashboard - FlippinBargains</title>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - My Listings</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script src="firebase.js" defer></script>
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: #f2f2f2;
-      margin: 0;
-      padding: 0;
-    }
-    .header {
-      background-color: #222;
-      color: #fff;
-      padding: 20px;
-      text-align: center;
-    }
-    .container {
+      font-family: Arial;
+      background: #f7f7f7;
       padding: 20px;
     }
-    .logout {
-      float: right;
-      margin-top: -40px;
-      margin-right: 20px;
+    .listing {
+      background: white;
+      margin-bottom: 15px;
+      padding: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .listing img {
+      max-width: 100%;
+      margin-bottom: 10px;
     }
     button {
-      padding: 10px;
-      background-color: #d9534f;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-    .welcome {
-      font-size: 20px;
-      margin-top: 20px;
+      margin-top: 10px;
     }
   </style>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";const firebaseConfig = {
-  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-  projectId: "flippinbargains-e8a8a",
-  storageBucket: "flippinbargains-e8a8a.appspot.com",
-  messagingSenderId: "920267203424",
-  appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-  measurementId: "G-03GDHRHYYC"
-};
-
-const app = initializeApp(firebaseConfig);
-const auth = getAuth(app);
-
-const welcomeDiv = document.getElementById("welcome");
-const logoutBtn = document.getElementById("logoutBtn");
-
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    welcomeDiv.innerText = `Welcome, ${user.email}`;
-  } else {
-    window.location.href = "login.html";
-  }
-});
-
-logoutBtn.addEventListener("click", () => {
-  signOut(auth).then(() => {
-    window.location.href = "login.html";
-  });
-});
-
-  </script>
 </head>
 <body>
-  <div class="header">
-    <h1>FlippinBargains Dashboard</h1>
-    <button id="logoutBtn" class="logout">Logout</button>
-  </div>
-  <div class="container">
-    <p class="welcome" id="welcome">Loading...</p>
-    <p>From here, you can manage your listings, view messages, and more!</p>
-  </div>
-</body>
+  <h1>Your Listings</h1>
+  <div id="listings"></div>  <script type="module">
+    import { getFirestore, collection, query, where, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { app } from './firebase.js';
+
+    const db = getFirestore(app);
+    const auth = getAuth(app);
+    const listingsDiv = document.getElementById("listings");
+
+    onAuthStateChanged(auth, async user => {
+      if (!user) return location.href = "login.html";
+      const q = query(collection(db, "products"), where("userId", "==", user.uid));
+      const snapshot = await getDocs(q);
+
+      if (snapshot.empty) {
+        listingsDiv.innerHTML = '<p>No listings yet.</p>';
+        return;
+      }
+
+      snapshot.forEach(docSnap => {
+        const data = docSnap.data();
+        const card = document.createElement("div");
+        card.className = "listing";
+        card.innerHTML = `
+          ${data.imageUrl ? `<img src="${data.imageUrl}" alt="${data.title}" />` : ''}
+          <h3>${data.title}</h3>
+          <p>${data.description}</p>
+          <p><strong>$${data.price}</strong></p>
+          <button onclick="deleteListing('${docSnap.id}')">Delete</button>
+        `;
+        listingsDiv.appendChild(card);
+      });
+    });
+
+    window.deleteListing = async function(id) {
+      if (confirm("Are you sure you want to delete this listing?")) {
+        await deleteDoc(doc(db, "products", id));
+        alert("Deleted.");
+        location.reload();
+      }
+    };
+  </script></body>
 </html>
