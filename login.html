@@ -1,16 +1,45 @@
-<!DOCTYPE html>
-<html>
+<!DOCTYPE html><html>
 <head>
+  <meta charset="UTF-8">
   <title>Login</title>
+  <script type="module">
+    // Firebase imports
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js";// Firebase config
+const firebaseConfig = {
+  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+  projectId: "flippinbargains-e8a8a",
+  storageBucket: "flippinbargains-e8a8a.appspot.com",
+  messagingSenderId: "920267203424",
+  appId: "1:920267203424:web:d703d051131d8e2d9bb405",
+  measurementId: "G-03GDHRHYYC"
+};
+
+// Init
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+// Login handler
+window.login = async function () {
+  const email = document.getElementById('email').value;
+  const password = document.getElementById('password').value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    alert("Login successful!");
+    window.location.href = "dashboard.html";
+  } catch (error) {
+    alert("Login failed: " + error.message);
+  }
+}
+
+  </script>
 </head>
 <body>
-  <h1>Login Page</h1>
-  <form>
-    <label>Email:</label><br>
-    <input type="email" /><br>
-    <label>Password:</label><br>
-    <input type="password" /><br>
-    <button type="submit">Login</button>
-  </form>
+  <h1>Login</h1>
+  <input type="email" id="email" placeholder="Email"><br>
+  <input type="password" id="password" placeholder="Password"><br>
+  <button onclick="login()">Login</button>
+  <p>Don't have an account? <a href="register.html">Register</a></p>
 </body>
 </html>
