@@ -4,104 +4,89 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Sell Item</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script type="module">
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-      import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
-      import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";const firebaseConfig = {
-    apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-    authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-    projectId: "flippinbargains-e8a8a",
-    storageBucket: "flippinbargains-e8a8a.appspot.com",
-    messagingSenderId: "920267203424",
-    appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-    measurementId: "G-03GDHRHYYC"
-  };
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="/firebase.js"></script>
+  </head>
+  <body class="bg-gray-100 flex items-center justify-center min-h-screen">
+    <div class="bg-white p-6 rounded-2xl shadow-md w-full max-w-md">
+      <h1 class="text-2xl font-bold mb-4 text-center">Sell Your Item</h1>
+      <form id="sellForm" class="space-y-4">
+        <input type="text" id="title" placeholder="Item Title" class="w-full border rounded px-3 py-2" required />
+        <textarea id="description" placeholder="Item Description" class="w-full border rounded px-3 py-2" required></textarea>
+        <input type="number" id="price" placeholder="Price (USD)" step="0.01" class="w-full border rounded px-3 py-2" required /><select id="category" class="w-full border rounded px-3 py-2">
+      <option disabled selected>Select Category</option>
+      <option>Electronics</option>
+      <option>Clothing</option>
+      <option>Collectibles</option>
+      <option>Handmade</option>
+    </select>
 
-  const app = initializeApp(firebaseConfig);
-  const storage = getStorage(app);
-  const db = getFirestore(app);
+    <select id="shipping" class="w-full border rounded px-3 py-2">
+      <option disabled selected>Select Shipping Method</option>
+      <option>USPS</option>
+      <option>UPS</option>
+      <option>FedEx</option>
+    </select>
 
-  const form = document.getElementById("sellForm");
-  const listButton = document.getElementById("listButton");
-  const spinner = document.getElementById("spinner");
+    <input type="number" id="weight" placeholder="Weight (lbs)" step="0.1" class="w-full border rounded px-3 py-2" required />
+    <input type="file" id="images" multiple class="w-full" accept="image/*" required />
 
-  form.addEventListener("submit", async (e) => {
+    <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded font-semibold">List Item</button>
+    <div id="loading" class="text-center text-sm text-gray-500 hidden">Uploading...</div>
+  </form>
+</div>
+
+<script>
+  const form = document.getElementById('sellForm');
+  const loading = document.getElementById('loading');
+
+  form.addEventListener('submit', async (e) => {
     e.preventDefault();
+    loading.classList.remove('hidden');
 
-    listButton.disabled = true;
-    spinner.classList.remove("hidden");
+    const title = document.getElementById('title').value.trim();
+    const description = document.getElementById('description').value.trim();
+    const price = parseFloat(document.getElementById('price').value);
+    const category = document.getElementById('category').value;
+    const shipping = document.getElementById('shipping').value;
+    const weight = parseFloat(document.getElementById('weight').value);
+    const imageFiles = document.getElementById('images').files;
+
+    const imageUrls = [];
 
     try {
-      const title = form.title.value;
-      const description = form.description.value;
-      const price = parseFloat(form.price.value);
-      const category = form.category.value;
-      const shipping = form.shipping.value;
-      const weight = form.weight.value;
-      const files = form.images.files;
-
-      if (!title || !price || files.length === 0) throw new Error("All fields and at least 1 image required.");
-
-      const urls = [];
-      for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        const fileRef = storageRef(storage, `items/${Date.now()}_${file.name}`);
-        const snapshot = await uploadBytes(fileRef, file);
-        const url = await getDownloadURL(snapshot.ref);
-        urls.push(url);
+      const storageRef = firebase.storage().ref();
+      for (let i = 0; i < imageFiles.length; i++) {
+        const file = imageFiles[i];
+        const fileRef = storageRef.child(`items/${Date.now()}-${file.name}`);
+        await fileRef.put(file);
+        const url = await fileRef.getDownloadURL();
+        imageUrls.push(url);
       }
 
-      console.log("Uploaded image URLs:", urls);
-
-      await addDoc(collection(db, "items"), {
+      await firebase.firestore().collection('items').add({
         title,
         description,
         price,
         category,
         shipping,
         weight,
-        images: urls,
-        created: serverTimestamp(),
+        images: imageUrls,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
       });
 
-      console.log("Item saved to Firestore");
-      window.location.href = "dashboard.html";
-    } catch (error) {
-      alert("Error: " + error.message);
-      console.error("Listing failed:", error);
-      spinner.classList.add("hidden");
-      listButton.disabled = false;
+      alert('Item listed successfully!');
+      window.location.href = 'dashboard.html';
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert('Failed to list item. See console for details.');
+    } finally {
+      loading.classList.add('hidden');
     }
   });
 </script>
-
-  </head>
-  <body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
-    <form id="sellForm" class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-md space-y-4">
-      <h1 class="text-2xl font-bold text-center">Sell Your Item</h1>
-      <input type="text" name="title" placeholder="Item Title" class="w-full px-4 py-2 border rounded" required />
-      <textarea name="description" placeholder="Item Description" class="w-full px-4 py-2 border rounded" required></textarea>
-      <input type="number" step="0.01" name="price" placeholder="Price (USD)" class="w-full px-4 py-2 border rounded" required />
-      <select name="category" class="w-full px-4 py-2 border rounded" required>
-        <option value="">Select Category</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Clothing">Clothing</option>
-        <option value="Handmade">Handmade</option>
-        <option value="Collectibles">Collectibles</option>
-        <option value="Other">Other</option>
-      </select>
-      <select name="shipping" class="w-full px-4 py-2 border rounded" required>
-        <option value="">Select Shipping</option>
-        <option value="USPS">USPS</option>
-        <option value="FedEx">FedEx</option>
-        <option value="UPS">UPS</option>
-      </select>
-      <input type="text" name="weight" placeholder="Weight (lbs)" class="w-full px-4 py-2 border rounded" required />
-      <input type="file" name="images" multiple accept="image/*" class="w-full" required /><div class="flex justify-center">
-    <button id="listButton" type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">List Item</button>
-    <div id="spinner" class="ml-4 hidden animate-spin h-6 w-6 border-4 border-blue-300 border-t-transparent rounded-full"></div>
-  </div>
-</form>
 
   </body>
 </html>
