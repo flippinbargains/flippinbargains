@@ -1,19 +1,58 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flippin Bargains - Products</title>
+  <meta charset="UTF-8">
+  <title>FlippinBargains - Products</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js"></script>
+  <script src="firebase.js" defer></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f4f4;
+      margin: 20px;
+    }
+    .product {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    h2 {
+      margin-top: 0;
+    }
+  </style>
 </head>
 <body>
-  <h1>Shop Our Hot Deals 🔥</h1>
-  <ul>
-    <li>New & Used Clothes</li>
-    <li>Handmade Items</li>
-    <li>Cool Collectibles</li>
-    <li>Electronics</li>
-    <li>And More!</li>
-  </ul>
-  <a href="index.html">← Back to Home</a>
-</body>
+  <h1>All Products</h1>
+  <div id="product-list"></div>  <script type="module">
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { app } from './firebase.js';
+
+    const db = getFirestore(app);
+
+    async function loadProducts() {
+      const querySnapshot = await getDocs(collection(db, "products"));
+      const list = document.getElementById("product-list");
+
+      if (querySnapshot.empty) {
+        list.innerHTML = '<p>No products listed yet.</p>';
+        return;
+      }
+
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        const item = document.createElement("div");
+        item.className = "product";
+        item.innerHTML = `
+          <h2>${data.title}</h2>
+          <p><strong>Price:</strong> $${data.price}</p>
+          <p>${data.description}</p>
+        `;
+        list.appendChild(item);
+      });
+    }
+
+    loadProducts();
+  </script></body>
 </html>
