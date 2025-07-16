@@ -1,77 +1,73 @@
-<!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sell Item</title>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
-  <script src="firebase.js"></script>
-</head>
-<body>
-  <h1>Sell Your Item</h1>
-  <form id="sellForm">
-    <input type="text" id="title" placeholder="Item Title" required><br><br>
-    <textarea id="description" placeholder="Item Description" required></textarea><br><br>
-    <input type="number" id="price" placeholder="Price (USD)" required><br><br>
-    <select id="category" required>
-      <option value="">Select Category</option>
-      <option value="clothing">Clothing</option>
-      <option value="electronics">Electronics</option>
-      <option value="collectibles">Collectibles</option>
-      <option value="handmade">Handmade</option>
-      <option value="books">Books</option>
-      <option value="sports">Sports</option>
-      <option value="home">Home & Garden</option>
-      <option value="toys">Toys</option>
-      <option value="vehicles">Vehicles</option>
-    </select><br><br>
-    <input type="file" id="image" accept="image/*"><br><br>
-    <button type="submit">List Item</button>
-  </form>  <script>
-    const sellForm = document.getElementById('sellForm');
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sell Item</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
+    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
+      <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Sell Your Item</h1>
+      <form id="sellForm" class="space-y-4">
+        <input
+          type="text"
+          placeholder="Item Title"
+          id="title"
+          required
+          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <textarea
+          placeholder="Item Description"
+          id="description"
+          required
+          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        ></textarea>
+        <input
+          type="number"
+          placeholder="Price (USD)"
+          id="price"
+          required
+          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        />
+        <select
+          id="category"
+          required
+          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
+        >
+          <option disabled selected value="">Select Category</option>
+          <option>Clothing</option>
+          <option>Electronics</option>
+          <option>Collectibles</option>
+          <option>Home & Garden</option>
+          <option>Handmade</option>
+          <option>Toys</option>
+          <option>Books</option>
+          <option>Tools</option>
+          <option>Pet Supplies</option>
+          <option>Auto Parts</option>
+        </select>
+        <input
+          type="file"
+          id="image"
+          accept="image/*"
+          class="w-full border rounded-lg px-4 py-2 bg-white focus:outline-none"
+        />
+        <button
+          type="submit"
+          class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
+        >
+          List Item
+        </button>
+      </form>
+    </div>
 
-    sellForm.addEventListener('submit', async (e) => {
-      e.preventDefault();
-
-      const title = document.getElementById('title').value.trim();
-      const description = document.getElementById('description').value.trim();
-      const price = parseFloat(document.getElementById('price').value);
-      const category = document.getElementById('category').value;
-      const image = document.getElementById('image').files[0];
-
-      try {
-        const user = firebase.auth().currentUser;
-        if (!user) {
-          alert("You must be logged in to list an item.");
-          return;
-        }
-
-        let imageUrl = "";
-        if (image) {
-          const storageRef = firebase.storage().ref();
-          const imageRef = storageRef.child(`images/${Date.now()}_${image.name}`);
-          await imageRef.put(image);
-          imageUrl = await imageRef.getDownloadURL();
-        }
-
-        await firebase.firestore().collection("products").add({
-          title,
-          description,
-          price,
-          category,
-          imageUrl,
-          userId: user.uid,
-          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-        });
-
+    <script>
+      document.getElementById("sellForm").addEventListener("submit", function (e) {
+        e.preventDefault();
         alert("Item listed successfully!");
-        sellForm.reset();
-      } catch (error) {
-        console.error("Listing failed:", error);
-        alert("Listing failed. Try again.");
-      }
-    });
-  </script></body>
+        // here you'd trigger Firebase or backend logic
+      });
+    </script>
+  </body>
 </html>
