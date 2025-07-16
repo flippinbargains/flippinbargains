@@ -2,90 +2,41 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sell Item</title>
+    <title>Dashboard</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script type="module" src="/firebase.js"></script>
   </head>
-  <body class="bg-gray-100 min-h-screen flex items-center justify-center px-4">
-    <div class="bg-white p-8 rounded-2xl shadow-xl w-full max-w-lg">
-      <h1 class="text-3xl font-bold text-center mb-6 text-gray-800">Sell Your Item</h1>
-      <form id="sellForm" class="space-y-4">
-        <input
-          type="text"
-          placeholder="Item Title"
-          id="title"
-          required
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <textarea
-          placeholder="Item Description"
-          id="description"
-          required
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        ></textarea>
-        <input
-          type="number"
-          placeholder="Price (USD)"
-          id="price"
-          required
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        />
-        <select
-          id="category"
-          required
-          class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-          <option disabled selected value="">Select Category</option>
-          <option>Clothing</option>
-          <option>Electronics</option>
-          <option>Collectibles</option>
-          <option>Home & Garden</option>
-          <option>Handmade</option>
-          <option>Toys</option>
-          <option>Books</option>
-          <option>Tools</option>
-          <option>Pet Supplies</option>
-          <option>Auto Parts</option>
-        </select>
-        <input
-          type="file"
-          id="image"
-          accept="image/*"
-          class="w-full border rounded-lg px-4 py-2 bg-white focus:outline-none"
-        /><select
-      id="shipping"
-      required
-      class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-    >
-      <option disabled selected value="">Select Shipping Carrier</option>
-      <option>USPS</option>
-      <option>UPS</option>
-      <option>FedEx</option>
-      <option>DHL</option>
-    </select>
+  <body class="bg-gray-100 min-h-screen px-4 py-8">
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">My Listed Items</h1>
+      <div id="itemsList" class="space-y-4"></div>
+    </div><script type="module">
+  import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+  import { app } from './firebase.js';
 
-    <input
-      type="number"
-      id="weight"
-      placeholder="Weight (lbs)"
-      required
-      class="w-full border rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-400"
-    />
+  const db = getFirestore(app);
 
-    <button
-      type="submit"
-      class="w-full bg-blue-600 text-white font-semibold py-2 rounded-lg hover:bg-blue-700 transition"
-    >
-      List Item
-    </button>
-  </form>
-</div>
+  const itemsList = document.getElementById('itemsList');
 
-<script>
-  document.getElementById("sellForm").addEventListener("submit", function (e) {
-    e.preventDefault();
-    alert("Item listed successfully!");
-    // here you'd trigger Firebase or backend logic
-  });
+  async function loadItems() {
+    const querySnapshot = await getDocs(collection(db, "items"));
+    querySnapshot.forEach((doc) => {
+      const data = doc.data();
+      const itemHTML = `
+        <div class="bg-white p-4 rounded-xl shadow-md">
+          <h2 class="text-xl font-semibold">${data.title}</h2>
+          <p class="text-gray-600">${data.description}</p>
+          <div class="text-sm text-gray-500 mt-1">Category: ${data.category}</div>
+          <div class="text-sm text-gray-500">Price: $${data.price}</div>
+          <div class="text-sm text-gray-500">Shipping via ${data.shippingCarrier || 'N/A'}</div>
+          <div class="text-sm text-gray-500">Weight: ${data.weight || 'N/A'} lbs</div>
+        </div>
+      `;
+      itemsList.insertAdjacentHTML('beforeend', itemHTML);
+    });
+  }
+
+  loadItems();
 </script>
 
   </body>
