@@ -1,1 +1,84 @@
-<h1>Dashboard Page</h1>
+<!DOCTYPE html><html>
+<head>
+  <title>Dashboard - FlippinBargains</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f2f2f2;
+      margin: 0;
+      padding: 0;
+    }
+    .header {
+      background-color: #222;
+      color: #fff;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      padding: 20px;
+    }
+    .logout {
+      float: right;
+      margin-top: -40px;
+      margin-right: 20px;
+    }
+    button {
+      padding: 10px;
+      background-color: #d9534f;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .welcome {
+      font-size: 20px;
+      margin-top: 20px;
+    }
+  </style>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";const firebaseConfig = {
+  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+  projectId: "flippinbargains-e8a8a",
+  storageBucket: "flippinbargains-e8a8a.appspot.com",
+  messagingSenderId: "920267203424",
+  appId: "1:920267203424:web:d703d051131d8e2d9bb405",
+  measurementId: "G-03GDHRHYYC"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+
+const welcomeDiv = document.getElementById("welcome");
+const logoutBtn = document.getElementById("logoutBtn");
+
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    welcomeDiv.innerText = `Welcome, ${user.email}`;
+  } else {
+    window.location.href = "login.html";
+  }
+});
+
+logoutBtn.addEventListener("click", () => {
+  signOut(auth).then(() => {
+    window.location.href = "login.html";
+  });
+});
+
+  </script>
+</head>
+<body>
+  <div class="header">
+    <h1>FlippinBargains Dashboard</h1>
+    <button id="logoutBtn" class="logout">Logout</button>
+  </div>
+  <div class="container">
+    <p class="welcome" id="welcome">Loading...</p>
+    <p>From here, you can manage your listings, view messages, and more!</p>
+  </div>
+</body>
+</html>
