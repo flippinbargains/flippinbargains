@@ -15,15 +15,17 @@
   import { app } from './firebase.js';
 
   const db = getFirestore(app);
-
   const itemsList = document.getElementById('itemsList');
 
   async function loadItems() {
     const querySnapshot = await getDocs(collection(db, "items"));
     querySnapshot.forEach((doc) => {
       const data = doc.data();
+      const imagesHTML = (data.imageUrls || []).map(url => `<img src="${url}" class="w-24 h-24 object-cover rounded mr-2" />`).join('');
+
       const itemHTML = `
         <div class="bg-white p-4 rounded-xl shadow-md">
+          <div class="flex flex-wrap mb-4">${imagesHTML}</div>
           <h2 class="text-xl font-semibold">${data.title}</h2>
           <p class="text-gray-600">${data.description}</p>
           <div class="text-sm text-gray-500 mt-1">Category: ${data.category}</div>
