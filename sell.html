@@ -1,65 +1,72 @@
-<!DOCTYPE html><html lang="en">
+<!-- File: sell.html --><!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sell Item</title>
-  <script type="module" src="firebase.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="firebase.js"></script>
 </head>
 <body>
   <h1>Sell Your Item</h1>
   <form id="sellForm">
-    <label for="title">Item Title:</label><br>
-    <input type="text" id="title" name="title" required><br><br><label for="description">Description:</label><br>
-<textarea id="description" name="description" rows="4" required></textarea><br><br>
+    <input type="text" id="title" placeholder="Item Title" required><br><br>
+    <textarea id="description" placeholder="Item Description" required></textarea><br><br>
+    <input type="number" id="price" placeholder="Price (USD)" required><br><br>
+    <select id="category" required>
+      <option value="">Select Category</option>
+      <option value="clothing">Clothing</option>
+      <option value="electronics">Electronics</option>
+      <option value="collectibles">Collectibles</option>
+      <option value="handmade">Handmade</option>
+      <option value="books">Books</option>
+      <option value="sports">Sports</option>
+      <option value="home">Home & Garden</option>
+      <option value="toys">Toys</option>
+      <option value="vehicles">Vehicles</option>
+    </select><br><br>
+    <input type="file" id="image" accept="image/*"><br><br>
+    <button type="submit">List Item</button>
+  </form>  <script>
+    const sellForm = document.getElementById('sellForm');
 
-<label for="category">Category:</label><br>
-<select id="category" name="category" required>
-  <option value="">Select a category</option>
-  <option value="Electronics">Electronics</option>
-  <option value="Clothing">Clothing</option>
-  <option value="Collectibles">Collectibles</option>
-  <option value="Handmade">Handmade</option>
-  <option value="Home & Garden">Home & Garden</option>
-  <option value="Sports">Sports</option>
-  <option value="Toys">Toys</option>
-  <option value="Books">Books</option>
-  <option value="Automotive">Automotive</option>
-</select><br><br>
-
-<label for="price">Price (USD):</label><br>
-<input type="number" id="price" name="price" min="0" step="0.01" required><br><br>
-
-<label for="image">Upload Image:</label><br>
-<input type="file" id="image" name="image"><br><br>
-
-<button type="submit">Post Item</button>
-
-  </form>  <script type="module">
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-lite.js";
-    import { app } from './firebase.js';
-
-    const db = getFirestore(app);
-    const form = document.getElementById('sellForm');
-
-    form.addEventListener('submit', async (e) => {
+    sellForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const title = form.title.value;
-      const description = form.description.value;
-      const category = form.category.value;
-      const price = parseFloat(form.price.value);
+
+      const title = document.getElementById('title').value.trim();
+      const description = document.getElementById('description').value.trim();
+      const price = parseFloat(document.getElementById('price').value);
+      const category = document.getElementById('category').value;
+      const image = document.getElementById('image').files[0];
 
       try {
-        await addDoc(collection(db, "items"), {
+        const user = firebase.auth().currentUser;
+        if (!user) {
+          alert("You must be logged in to list an item.");
+          return;
+        }
+
+        let imageUrl = "";
+        if (image) {
+          // Image upload to be implemented next step
+        }
+
+        await firebase.firestore().collection("items").add({
           title,
           description,
-          category,
           price,
-          createdAt: new Date()
+          category,
+          imageUrl,
+          userId: user.uid,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp(),
         });
+
         alert("Item listed successfully!");
-        form.reset();
-      } catch (err) {
-        alert("Error: " + err.message);
+        sellForm.reset();
+      } catch (error) {
+        console.error("Listing failed:", error);
+        alert("Listing failed. Try again.");
       }
     });
   </script></body>
