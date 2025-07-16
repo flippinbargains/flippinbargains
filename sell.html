@@ -1,4 +1,4 @@
-<!-- File: sell.html --><!DOCTYPE html><html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -6,6 +6,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js"></script>
   <script src="firebase.js"></script>
 </head>
 <body>
@@ -49,10 +50,13 @@
 
         let imageUrl = "";
         if (image) {
-          // Image upload to be implemented next step
+          const storageRef = firebase.storage().ref();
+          const imageRef = storageRef.child(`images/${Date.now()}_${image.name}`);
+          await imageRef.put(image);
+          imageUrl = await imageRef.getDownloadURL();
         }
 
-        await firebase.firestore().collection("items").add({
+        await firebase.firestore().collection("products").add({
           title,
           description,
           price,
