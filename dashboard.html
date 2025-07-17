@@ -7,11 +7,36 @@
   </head>
   <body class="bg-gray-100 min-h-screen px-4 py-8">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">My Listed Items</h1>
-      <div id="itemsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        <!-- Items will load here -->
-      </div>
-    </div><script type="module">
+      <h1 class="text-4xl font-bold mb-8 text-center text-gray-800">My Listed Items</h1><div class="flex justify-between items-center mb-4">
+    <select id="sortFilter" class="border rounded px-3 py-2">
+      <option value="createdAt-desc">Newest First</option>
+      <option value="createdAt-asc">Oldest First</option>
+      <option value="price-asc">Price Low to High</option>
+      <option value="price-desc">Price High to Low</option>
+    </select>
+  </div>
+
+  <div id="itemsList" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+    <!-- Items will load here -->
+  </div>
+</div>
+
+<div id="editModal" class="fixed inset-0 bg-black/50 hidden items-center justify-center z-50">
+  <div class="bg-white w-full max-w-md p-6 rounded-xl">
+    <h2 class="text-xl font-bold mb-4">Edit Listing</h2>
+    <form id="editForm" class="space-y-3">
+      <input type="hidden" id="editId">
+      <input type="text" id="editTitle" placeholder="Title" class="w-full border px-3 py-2 rounded" required>
+      <textarea id="editDesc" placeholder="Description" class="w-full border px-3 py-2 rounded" required></textarea>
+      <input type="number" step="0.01" id="editPrice" placeholder="Price" class="w-full border px-3 py-2 rounded" required>
+      <input type="text" id="editBrand" placeholder="Brand" class="w-full border px-3 py-2 rounded">
+      <input type="text" id="editCondition" placeholder="Condition" class="w-full border px-3 py-2 rounded">
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded w-full">Save Changes</button>
+    </form>
+  </div>
+</div>
+
+<script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
   import {
     getFirestore,
@@ -20,7 +45,8 @@
     query,
     orderBy,
     deleteDoc,
-    doc
+    doc,
+    updateDoc
   } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
 
   const firebaseConfig = {
@@ -37,65 +63,88 @@
   const db = getFirestore(app);
 
   const itemsList = document.getElementById("itemsList");
+  const sortFilter = document.getElementById("sortFilter");
+  const editModal = document.getElementById("editModal");
+  const editForm = document.getElementById("editForm");
+
+  sortFilter.addEventListener("change", loadItems);
 
   async function loadItems() {
-    try {
-      const q = query(collection(db, "items"), orderBy("createdAt", "desc"));
-      const querySnapshot = await getDocs(q);
+    itemsList.innerHTML = "Loading...";
+    const [field, dir] = sortFilter.value.split("-");
+    const q = query(collection(db, "items"), orderBy(field, dir));
+    const querySnapshot = await getDocs(q);
 
-      if (querySnapshot.empty) {
-        itemsList.innerHTML = '<p class="text-gray-600">No items listed yet.</p>';
-        return;
-      }
+    itemsList.innerHTML = "";
 
-      querySnapshot.forEach(docSnap => {
-        const item = docSnap.data();
-        const itemId = docSnap.id;
+    querySnapshot.forEach(docSnap => {
+      const item = docSnap.data();
+      const itemId = docSnap.id;
 
-        const imageTags = (item.imageUrls || []).slice(0, 3).map(url =>
-          `<img src="${url}" class="w-full h-40 object-cover rounded-t-md">`
-        ).join('');
+      const imageTags = (item.imageUrls || []).slice(0, 3).map(url =>
+        `<img src="${url}" class="w-full h-40 object-cover rounded-t-md">`
+      ).join('');
 
-        const card = document.createElement('div');
-        card.className = "bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden";
-        card.innerHTML = `
-          <div class="overflow-hidden">${imageTags}</div>
-          <div class="p-4">
-            <h2 class="text-lg font-bold text-gray-800 mb-1">${item.title}</h2>
-            <p class="text-gray-600 text-sm line-clamp-2">${item.description}</p>
-            <div class="text-sm text-gray-500 mt-1">Category: ${item.category}</div>
-            <div class="text-sm text-gray-500">Condition: ${item.condition || 'N/A'}</div>
-            <div class="text-sm text-gray-500">Brand: ${item.brand || 'N/A'}</div>
-            <div class="text-sm text-gray-500">Price: $${item.price}</div>
-            <div class="text-sm text-gray-500">Shipping: ${item.shippingCarrier}</div>
-            <div class="text-sm text-gray-500">Weight: ${item.weight} lbs</div>
-            <div class="flex gap-2 mt-4">
-              <button class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" onclick="alert('Edit not implemented yet')">Edit</button>
-              <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700" onclick="deleteItem('${itemId}')">Delete</button>
-            </div>
+      const card = document.createElement('div');
+      card.className = "bg-white rounded-2xl shadow hover:shadow-lg transition overflow-hidden";
+      card.innerHTML = `
+        <div class="overflow-hidden">${imageTags}</div>
+        <div class="p-4">
+          <h2 class="text-lg font-bold text-gray-800 mb-1">${item.title}</h2>
+          <p class="text-gray-600 text-sm line-clamp-2">${item.description}</p>
+          <div class="text-sm text-gray-500 mt-1">Category: ${item.category}</div>
+          <div class="text-sm text-gray-500">Condition: ${item.condition || 'N/A'}</div>
+          <div class="text-sm text-gray-500">Brand: ${item.brand || 'N/A'}</div>
+          <div class="text-sm text-gray-500">Price: $${item.price}</div>
+          <div class="text-sm text-gray-500">Shipping: ${item.shippingCarrier}</div>
+          <div class="text-sm text-gray-500">Weight: ${item.weight} lbs</div>
+          <div class="flex gap-2 mt-4">
+            <button class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600" onclick="showEdit('${itemId}', '${item.title}', \`${item.description}\`, '${item.price}', '${item.brand}', '${item.condition}')">Edit</button>
+            <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700" onclick="deleteItem('${itemId}')">Delete</button>
           </div>
-        `;
+        </div>
+      `;
 
-        itemsList.appendChild(card);
-      });
-    } catch (error) {
-      console.error("Error loading items:", error);
-      itemsList.innerHTML = '<p class="text-red-500">Failed to load items.</p>';
-    }
+      itemsList.appendChild(card);
+    });
   }
 
-  async function deleteItem(id) {
+  window.deleteItem = async function (id) {
     if (confirm("Are you sure you want to delete this item?")) {
-      try {
-        await deleteDoc(doc(db, "items", id));
-        alert("Item deleted.");
-        location.reload();
-      } catch (err) {
-        alert("Failed to delete item.");
-        console.error(err);
-      }
+      await deleteDoc(doc(db, "items", id));
+      alert("Deleted");
+      loadItems();
     }
-  }
+  };
+
+  window.showEdit = function (id, title, description, price, brand, condition) {
+    editModal.classList.remove("hidden");
+    document.getElementById("editId").value = id;
+    document.getElementById("editTitle").value = title;
+    document.getElementById("editDesc").value = description;
+    document.getElementById("editPrice").value = price;
+    document.getElementById("editBrand").value = brand;
+    document.getElementById("editCondition").value = condition;
+  };
+
+  editForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const id = document.getElementById("editId").value;
+    const updates = {
+      title: document.getElementById("editTitle").value,
+      description: document.getElementById("editDesc").value,
+      price: parseFloat(document.getElementById("editPrice").value),
+      brand: document.getElementById("editBrand").value,
+      condition: document.getElementById("editCondition").value
+    };
+    await updateDoc(doc(db, "items", id), updates);
+    editModal.classList.add("hidden");
+    loadItems();
+  });
+
+  document.addEventListener("click", (e) => {
+    if (e.target === editModal) editModal.classList.add("hidden");
+  });
 
   loadItems();
 </script>
