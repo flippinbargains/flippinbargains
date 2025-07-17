@@ -9,68 +9,24 @@
     <div class="max-w-4xl mx-auto">
       <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">My Listed Items</h1>
       <div id="itemsList" class="space-y-4">
-        <!-- Dynamic items will be rendered here -->
+        <!-- Sample item template -->
+        <div class="bg-white p-4 rounded-xl shadow-md">
+          <h2 class="text-xl font-semibold">Item Title</h2>
+          <p class="text-gray-600">Description of the item goes here.</p>
+          <div class="text-sm text-gray-500 mt-1">Category: Electronics</div>
+          <div class="text-sm text-gray-500">Price: $199.99</div>
+          <div class="text-sm text-gray-500">Shipping via USPS</div>
+          <div class="text-sm text-gray-500">Weight: 2 lbs</div>
+          <div class="flex gap-2 mt-2">
+            <img src="https://via.placeholder.com/100" class="w-24 h-24 object-cover rounded" alt="Item Image">
+            <img src="https://via.placeholder.com/100" class="w-24 h-24 object-cover rounded" alt="Item Image">
+          </div>
+        </div>
+        <!-- End sample item -->
       </div>
-    </div><script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-  import {
-    getFirestore,
-    collection,
-    getDocs,
-    query,
-    orderBy,
-    where
-  } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-  import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-  const firebaseConfig = {
-    apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-    authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-    projectId: "flippinbargains-e8a8a",
-    storageBucket: "flippinbargains-e8a8a.appspot.com",
-    messagingSenderId: "920267203424",
-    appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-    measurementId: "G-03GDHRHYYC"
-  };
-
-  const app = initializeApp(firebaseConfig);
-  const db = getFirestore(app);
-  const auth = getAuth(app);
-
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      try {
-        const q = query(
-          collection(db, "items"),
-          where("userId", "==", user.uid),
-          orderBy("timestamp", "desc")
-        );
-        const querySnapshot = await getDocs(q);
-        const itemsList = document.getElementById("itemsList");
-        itemsList.innerHTML = "";
-
-        querySnapshot.forEach((doc) => {
-          const data = doc.data();
-          const itemEl = document.createElement("div");
-          itemEl.className = "bg-white p-4 rounded-xl shadow-md";
-          itemEl.innerHTML = `
-            <h2 class="text-xl font-semibold">${data.title}</h2>
-            <p class="text-gray-600">${data.description}</p>
-            <div class="text-sm text-gray-500 mt-1">Category: ${data.category}</div>
-            <div class="text-sm text-gray-500">Price: $${data.price}</div>
-            <div class="text-sm text-gray-500">Shipping via ${data.shipping}</div>
-            <div class="text-sm text-gray-500">Weight: ${data.weight} lbs</div>
-          `;
-          itemsList.appendChild(itemEl);
-        });
-      } catch (error) {
-        alert("Failed to load items: " + error.message);
-      }
-    } else {
-      alert("You must be logged in to view your dashboard.");
-      window.location.href = "login.html";
-    }
-  });
+    </div><script>
+  // In the future, fetch listed items from Firebase and render them dynamically
+  // Example: Loop over data from Firebase and populate #itemsList
 </script>
 
   </body>
