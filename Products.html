@@ -2,105 +2,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Listed Products</title>
+    <title>Product Details</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
   <body class="bg-gray-100 p-6">
-    <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold text-center text-gray-800 mb-6">My Products</h1>
-      <div class="mb-6 text-center">
-        <label for="categoryFilter" class="block text-gray-700 mb-2 font-medium">Filter by Category:</label>
-        <select id="categoryFilter" class="px-4 py-2 rounded border-gray-300">
-          <option value="">All Categories</option>
-          <option>Antiques</option>
-          <option>Art</option>
-          <option>Baby</option>
-          <option>Books</option>
-          <option>Business & Industrial</option>
-          <option>Cameras & Photo</option>
-          <option>Cell Phones & Accessories</option>
-          <option>Clothing, Shoes & Accessories</option>
-          <option>Collectibles</option>
-          <option>Computers/Tablets & Networking</option>
-          <option>Consumer Electronics</option>
-          <option>Crafts</option>
-          <option>Dolls & Bears</option>
-          <option>DVDs & Movies</option>
-          <option>Entertainment Memorabilia</option>
-          <option>Health & Beauty</option>
-          <option>Home & Garden</option>
-          <option>Jewelry & Watches</option>
-          <option>Music</option>
-          <option>Musical Instruments & Gear</option>
-          <option>Pet Supplies</option>
-          <option>Pottery & Glass</option>
-          <option>Real Estate</option>
-          <option>Specialty Services</option>
-          <option>Sporting Goods</option>
-          <option>Sports Mem, Cards & Fan Shop</option>
-          <option>Stamps</option>
-          <option>Tickets & Experiences</option>
-          <option>Toys & Hobbies</option>
-          <option>Travel</option>
-          <option>Video Games & Consoles</option>
-          <option>Everything Else</option>
-        </select>
+    <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-lg p-6">
+      <div class="mb-6">
+        <button onclick="history.back()" class="text-blue-600 hover:underline">← Back</button>
       </div>
-      <div id="productList" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div id="imageGallery" class="space-y-2"></div>
+        <div>
+          <h2 id="title" class="text-2xl font-bold text-gray-800 mb-2"></h2>
+          <p id="description" class="text-gray-700 mb-4"></p>
+          <div class="text-sm text-gray-600 mb-1" id="category"></div>
+          <div class="text-sm text-gray-600 mb-1" id="weight"></div>
+          <div class="text-xl text-green-700 font-bold mt-2" id="price"></div>
+        </div>
+      </div>
     </div><script>
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialCategory = urlParams.get("category") || "";
-  const products = JSON.parse(localStorage.getItem("items")) || [];
-  const productList = document.getElementById("productList");
-  const categoryFilter = document.getElementById("categoryFilter");
+  const items = JSON.parse(localStorage.getItem("items") || "[]");
+  const index = localStorage.getItem("viewItemIndex");
+  const item = items[index];
 
-  categoryFilter.value = initialCategory;
+  if (!item) {
+    document.body.innerHTML = '<div class="text-center mt-20 text-xl text-red-600">Product not found.</div>';
+  } else {
+    document.getElementById("title").textContent = item.title;
+    document.getElementById("description").textContent = item.description;
+    document.getElementById("category").textContent = `Category: ${item.category}`;
+    document.getElementById("weight").textContent = `Weight: ${item.weight} lbs`;
+    document.getElementById("price").textContent = `$${item.price}`;
 
-  categoryFilter.addEventListener("change", () => {
-    renderProducts(categoryFilter.value);
-  });
-
-  function renderProducts(filterCategory) {
-    productList.innerHTML = "";
-    const filtered = filterCategory
-      ? products.filter(p => p.category && p.category.toLowerCase() === filterCategory.toLowerCase())
-      : products;
-
-    if (filtered.length === 0) {
-      productList.innerHTML = `<div class='text-gray-600 col-span-full text-center'>No items found in "${filterCategory}" category.</div>`;
-      return;
-    }
-
-    filtered.forEach((product, index) => {
-      const div = document.createElement("div");
-      div.className = "bg-white shadow-lg rounded-xl p-4 cursor-pointer hover:shadow-xl transition";
-      div.onclick = () => viewDetails(index);
-
-      let imageHTML = product.images && product.images.length
-        ? `<div class='mb-2 overflow-hidden rounded-lg'>
-             <img src='${product.images[0]}' class='w-full h-48 object-cover' alt='Product image' />
-           </div>`
-        : "";
-
-      div.innerHTML = `
-        ${imageHTML}
-        <h2 class="text-xl font-semibold text-gray-800 mb-1">${product.title}</h2>
-        <p class="text-gray-600 mb-2">${product.description}</p>
-        <div class="text-sm text-gray-500 mb-1">Category: ${product.category || "N/A"}</div>
-        <div class="text-sm text-gray-500 mb-1">Weight: ${product.weight || "-"} lbs</div>
-        <div class="text-sm text-green-600 font-bold">$${product.price}</div>
-      `;
-
-      productList.appendChild(div);
+    const gallery = document.getElementById("imageGallery");
+    item.images.forEach(url => {
+      const img = document.createElement("img");
+      img.src = url;
+      img.className = "w-full rounded-lg object-cover";
+      gallery.appendChild(img);
     });
   }
-
-  function viewDetails(index) {
-    localStorage.setItem("viewItemIndex", index);
-    window.location.href = "product.html";
-  }
-
-  renderProducts(initialCategory);
 </script>
 
   </body>
