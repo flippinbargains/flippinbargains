@@ -1,1 +1,55 @@
-
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Shop by Category</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f6f6f6;
+      margin: 0;
+      padding: 2rem;
+    }
+    h1 {
+      text-align: center;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1rem;
+      max-width: 800px;
+      margin: auto;
+    }
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      text-decoration: none;
+      color: black;
+    }
+    .card:hover {
+      background: #eaeaea;
+    }
+  </style>
+</head>
+<body>
+  <h1>Browse Categories</h1>
+  <div class="grid">
+    <a class="card" href="category.html?category=Electronics">Electronics</a>
+    <a class="card" href="category.html?category=Clothing">Clothing</a>
+    <a class="card" href="category.html?category=Home">Home & Garden</a>
+    <a class="card" href="category.html?category=Collectibles">Collectibles</a>
+    <a class="card" href="category.html?category=Sports">Sports</a>
+    <a class="card" href="category.html?category=Handmade">Handmade</a>
+    <a class="card" href="category.html?category=Jewelry">Jewelry</a>
+    <a class="card" href="category.html?category=Auto">Auto Parts</a>
+    <a class="card" href="category.html?category=Health">Health & Beauty</a>
+    <a class="card" href="category.html?category=Books">Books</a>
+    <a class="card" href="category.html?category=VideoGames">Video Games</a>
+    <a class="card" href="category.html?category=Toys">Toys</a>
+  </div>
+</body>
+</html>
