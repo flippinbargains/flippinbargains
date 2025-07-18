@@ -2,52 +2,38 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Product Categories</title>
+    <title>eBay-style Categories</title>
     <script src="https://cdn.tailwindcss.com"></script>
   </head>
-  <body class="bg-gray-100 min-h-screen p-6">
+  <body class="bg-gray-100 min-h-screen p-4">
     <div class="max-w-6xl mx-auto">
-      <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">Shop by Category</h1>
-      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        <!-- Categories -->
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Antiques</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Art</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Baby</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Books</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Business & Industrial</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Cameras & Photo</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Cell Phones</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Clothing & Accessories</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Collectibles</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Computers/Tablets</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Consumer Electronics</div>
-        </a>
-        <a href="#" class="bg-white p-4 rounded-xl shadow hover:shadow-lg text-center">
-          <div class="font-semibold">Crafts</div>
-        </a>
-        <!-- Add more categories as needed -->
-      </div>
-    </div>
+      <h1 class="text-3xl font-bold mb-8 text-center text-gray-800">Explore Categories</h1>
+      <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
+        <!-- Looping through eBay-style categories -->
+        <script>
+          const categories = [
+            "Antiques", "Art", "Baby", "Books", "Business & Industrial",
+            "Cameras & Photo", "Cell Phones & Accessories", "Clothing, Shoes & Accessories",
+            "Coins & Paper Money", "Collectibles", "Computers/Tablets & Networking",
+            "Consumer Electronics", "Crafts", "Dolls & Bears", "DVDs & Movies",
+            "Entertainment Memorabilia", "Health & Beauty", "Home & Garden",
+            "Jewelry & Watches", "Music", "Musical Instruments & Gear",
+            "Pet Supplies", "Pottery & Glass", "Real Estate", "Specialty Services",
+            "Sporting Goods", "Sports Mem, Cards & Fan Shop", "Stamps", "Tickets & Experiences",
+            "Toys & Hobbies", "Travel", "Video Games & Consoles", "Everything Else"
+          ];const container = document.currentScript.parentElement;
+
+      categories.forEach(category => {
+        const safeCategory = encodeURIComponent(category);
+        container.innerHTML += `
+          <a href="products.html?category=${safeCategory}" class="bg-white rounded-xl shadow-md p-4 flex flex-col items-center hover:shadow-lg transition text-center">
+            <img src="https://cdn-icons-png.flaticon.com/512/777/777072.png" alt="${category}" class="w-10 h-10 mb-2">
+            <span class="text-gray-800 text-sm">${category}</span>
+          </a>`;
+      });
+    </script>
+  </div>
+</div>
+
   </body>
 </html>
