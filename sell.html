@@ -55,6 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const title = document.getElementById("title").value;
     const price = document.getElementById("price").value;
     const imageUrl = document.getElementById("image_url").value;
+    const category = document.getElementById("category").value;
 
     if (!imageUrl) {
       alert("Please upload an image first.");
@@ -65,14 +66,14 @@ document.addEventListener("DOMContentLoaded", () => {
       title,
       price,
       imageUrl,
+      category,
       description: "User product listing",
       createdAt: new Date().toISOString()
     };
 
     try {
       await addDoc(collection(db, "products"), product);
-      alert("✅ Product listed successfully!");
-      window.location.href = "products.html";
+      window.location.href = "success.html";
     } catch (error) {
       alert("❌ Failed to list product.");
     }
@@ -87,6 +88,14 @@ document.addEventListener("DOMContentLoaded", () => {
     <form id="sell-form" class="space-y-4">
       <input type="text" id="title" placeholder="Title" required class="w-full p-2 border rounded" />
       <input type="text" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
+      <select id="category" required class="w-full p-2 border rounded">
+        <option value="" disabled selected>Select Category</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Toys">Toys</option>
+        <option value="Books">Books</option>
+        <option value="Home">Home</option>
+      </select>
       <input type="hidden" id="image_url" />
       <button type="button" id="upload_btn" class="bg-blue-600 text-white px-4 py-2 rounded">Upload Image</button>
       <img id="preview" src="" alt="Preview" class="hidden max-h-48 rounded" />
