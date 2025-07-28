@@ -1,94 +1,69 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Sell Your Item</title>
-  <style>
-    body {
-      font-family: 'Inter', sans-serif;
-      background: #f2f2f2;
-      padding: 2rem;
-      margin: 0;
-    }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 16px;
-      box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-    }
-    input, select, textarea, button {
-      width: 100%;
-      margin-bottom: 1rem;
-      padding: 0.8rem;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-    }
-    button {
-      background-color: #007bff;
-      color: white;
-      font-weight: bold;
-      cursor: pointer;
-      transition: background 0.3s ease;
-    }
-    button:hover {
-      background-color: #0056b3;
-    }
-    .thumbnail-preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 1rem;
-    }
-    .thumbnail-preview img {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sell Item</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body><div class="container">
-  <h2>Sell Your Item</h2>
-  <form>
-    <input type="text" placeholder="Title" required />
-    <textarea placeholder="Description" rows="3" required></textarea>
-    <input type="number" placeholder="Price ($)" required />
-    <select required>
-      <option value="">Select Category</option>
-      <option>Clothing</option>
-      <option>Electronics</option>
-      <option>Books</option>
-      <option>Tools</option>
-    </select>
-    <input type="number" placeholder="Weight (lbs)" /><input type="file" id="imageUpload" multiple accept="image/*" />
-<div class="thumbnail-preview" id="previewArea"></div>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-4">List an Item</h1>
+    <form id="sell-form" class="space-y-4">
+      <input type="text" id="title" placeholder="Title" required class="w-full p-2 border rounded" />
+      <input type="text" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
+      <input type="file" id="image" accept="image/*" required class="w-full p-2 border rounded" />
+      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">List Item</button>
+    </form>
+  </div>  <script>
+    // Dummy local save
+    function saveProduct(product) {
+      const products = JSON.parse(localStorage.getItem("products") || "[]");
+      products.push(product);
+      localStorage.setItem("products", JSON.stringify(products));
+    }
 
-<button type="submit">List Item</button>
+    async function uploadImageToCloudinary(file) {
+      const url = 'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload';
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', 'YOUR_UNSIGNED_UPLOAD_PRESET');
 
-  </form>
-</div><script>
-  const imageUpload = document.getElementById('imageUpload');
-  const previewArea = document.getElementById('previewArea');
+      const res = await fetch(url, {
+        method: 'POST',
+        body: formData
+      });
 
-  imageUpload.addEventListener('change', function () {
-    previewArea.innerHTML = ''; // Clear previous thumbnails
-    Array.from(this.files).forEach(file => {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        const img = document.createElement('img');
-        img.src = e.target.result;
-        previewArea.appendChild(img);
-      };
-      reader.readAsDataURL(file);
+      const data = await res.json();
+      return data.secure_url;
+    }
+
+    document.getElementById("sell-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const title = document.getElementById("title").value;
+      const price = document.getElementById("price").value;
+      const imageFile = document.getElementById("image").files[0];
+
+      if (!imageFile) {
+        alert("Please select an image.");
+        return;
+      }
+
+      try {
+        const imageUrl = await uploadImageToCloudinary(imageFile);
+        const product = {
+          id: "p" + Date.now(),
+          title,
+          price,
+          imageUrl,
+          description: "Test product using Cloudinary"
+        };
+        saveProduct(product);
+        alert("Item listed!");
+        window.location.href = "products.html";
+      } catch (err) {
+        alert("Image upload failed.");
+      }
     });
-  });
-</script></body>
+  </script></body>
 </html>
