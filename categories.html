@@ -3,76 +3,66 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Shop by Category</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     body {
       font-family: 'Inter', sans-serif;
-      background: #f9f9f9;
-      padding: 2rem;
+      background-color: #f9f9f9;
       margin: 0;
+      padding: 2rem;
+      text-align: center;
     }
     h1 {
-      text-align: center;
-      font-weight: 800;
       font-size: 2rem;
+      font-weight: 600;
       margin-bottom: 2rem;
     }
-    .grid {
+    .categories {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
       gap: 1rem;
-      max-width: 900px;
+      max-width: 800px;
       margin: 0 auto;
     }
     .category {
-      background: white;
-      border-radius: 12px;
+      background-color: #ffffff;
       padding: 1rem;
-      text-align: center;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-      cursor: pointer;
-      transition: 0.2s;
+      border-radius: 0.75rem;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      font-size: 1rem;
+      font-weight: 500;
+      text-decoration: none;
+      color: #333;
+      transition: background-color 0.2s ease;
     }
     .category:hover {
-      background-color: #eef1f5;
+      background-color: #f0f0f0;
     }
   </style>
 </head>
 <body>
   <h1>Browse Categories</h1>
-  <div class="grid">
-    <div class="category">Antiques</div>
-    <div class="category">Art</div>
-    <div class="category">Baby</div>
-    <div class="category">Books & Magazines</div>
-    <div class="category">Business & Industrial</div>
-    <div class="category">Cameras & Photo</div>
-    <div class="category">Cell Phones & Accessories</div>
-    <div class="category">Clothing, Shoes & Accessories</div>
-    <div class="category">Coins & Paper Money</div>
-    <div class="category">Collectibles</div>
-    <div class="category">Computers/Tablets & Networking</div>
-    <div class="category">Consumer Electronics</div>
-    <div class="category">Crafts</div>
-    <div class="category">Dolls & Bears</div>
-    <div class="category">DVDs & Movies</div>
-    <div class="category">eBay Motors</div>
-    <div class="category">Health & Beauty</div>
-    <div class="category">Home & Garden</div>
-    <div class="category">Jewelry & Watches</div>
-    <div class="category">Music</div>
-    <div class="category">Musical Instruments & Gear</div>
-    <div class="category">Pet Supplies</div>
-    <div class="category">Pottery & Glass</div>
-    <div class="category">Specialty Services</div>
-    <div class="category">Sporting Goods</div>
-    <div class="category">Sports Mem, Cards & Fan Shop</div>
-    <div class="category">Stamps</div>
-    <div class="category">Tickets & Experiences</div>
-    <div class="category">Tools & Home Improvement</div>
-    <div class="category">Toys & Hobbies</div>
-    <div class="category">Travel</div>
-    <div class="category">Video Games & Consoles</div>
+  <div class="categories">
+    <a href="products.html?category=electronics" class="category">Electronics</a>
+    <a href="products.html?category=clothing" class="category">Clothing</a>
+    <a href="products.html?category=home-garden" class="category">Home & Garden</a>
+    <a href="products.html?category=collectibles" class="category">Collectibles</a>
+    <a href="products.html?category=sports" class="category">Sports</a>
+    <a href="products.html?category=handmade" class="category">Handmade</a>
+    <a href="products.html?category=jewelry" class="category">Jewelry</a>
+    <a href="products.html?category=auto-parts" class="category">Auto Parts</a>
+    <a href="products.html?category=health-beauty" class="category">Health & Beauty</a>
+    <a href="products.html?category=books" class="category">Books</a>
+    <a href="products.html?category=video-games" class="category">Video Games</a>
+    <a href="products.html?category=toys" class="category">Toys</a>
+    <a href="products.html?category=pet-supplies" class="category">Pet Supplies</a>
+    <a href="products.html?category=business-industrial" class="category">Business & Industrial</a>
+    <a href="products.html?category=cellphones-accessories" class="category">Cell Phones & Accessories</a>
+    <a href="products.html?category=computers-tablets" class="category">Computers & Tablets</a>
+    <a href="products.html?category=travel" class="category">Travel</a>
+    <a href="products.html?category=cameras-photo" class="category">Cameras & Photo</a>
+    <a href="products.html?category=baby" class="category">Baby</a>
+    <a href="products.html?category=music" class="category">Music</a>
   </div>
 </body>
 </html>
