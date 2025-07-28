@@ -1,9 +1,85 @@
 <!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sell Item</title>
+  <title>Sell Product</title>
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+  projectId: "flippinbargains-e8a8a",
+  storageBucket: "flippinbargains-e8a8a.appspot.com",
+  messagingSenderId: "920267203424",
+  appId: "1:920267203424:web:d703d051131d8e2d9bb405",
+  measurementId: "G-03GDHRHYYC"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function openCloudinaryWidget(callback) {
+  const widget = cloudinary.createUploadWidget({
+    cloudName: 'dxbujdqyn',
+    uploadPreset: 'unsigned',
+    folder: 'products',
+    sources: ['local', 'camera', 'url'],
+    multiple: false,
+    cropping: false
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      callback(result.info.secure_url);
+    }
+  });
+  widget.open();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("sell-form");
+  const imageInput = document.getElementById("image_url");
+  const imagePreview = document.getElementById("preview");
+
+  document.getElementById("upload_btn").addEventListener("click", () => {
+    openCloudinaryWidget((url) => {
+      imageInput.value = url;
+      imagePreview.src = url;
+      imagePreview.classList.remove("hidden");
+    });
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const price = document.getElementById("price").value;
+    const imageUrl = document.getElementById("image_url").value;
+
+    if (!imageUrl) {
+      alert("Please upload an image first.");
+      return;
+    }
+
+    const product = {
+      title,
+      price,
+      imageUrl,
+      description: "User product listing",
+      createdAt: new Date().toISOString()
+    };
+
+    try {
+      await addDoc(collection(db, "products"), product);
+      alert("✅ Product listed successfully!");
+      window.location.href = "products.html";
+    } catch (error) {
+      alert("❌ Failed to list product.");
+    }
+  });
+});
+
+  </script>
 </head>
 <body class="bg-gray-100 p-6">
   <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
@@ -11,59 +87,11 @@
     <form id="sell-form" class="space-y-4">
       <input type="text" id="title" placeholder="Title" required class="w-full p-2 border rounded" />
       <input type="text" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
-      <input type="file" id="image" accept="image/*" required class="w-full p-2 border rounded" />
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">List Item</button>
+      <input type="hidden" id="image_url" />
+      <button type="button" id="upload_btn" class="bg-blue-600 text-white px-4 py-2 rounded">Upload Image</button>
+      <img id="preview" src="" alt="Preview" class="hidden max-h-48 rounded" />
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">List Product</button>
     </form>
-  </div>  <script>
-    // Dummy local save
-    function saveProduct(product) {
-      const products = JSON.parse(localStorage.getItem("products") || "[]");
-      products.push(product);
-      localStorage.setItem("products", JSON.stringify(products));
-    }
-
-    async function uploadImageToCloudinary(file) {
-      const url = 'https://api.cloudinary.com/v1_1/YOUR_CLOUD_NAME/image/upload';
-      const formData = new FormData();
-      formData.append('file', file);
-      formData.append('upload_preset', 'YOUR_UNSIGNED_UPLOAD_PRESET');
-
-      const res = await fetch(url, {
-        method: 'POST',
-        body: formData
-      });
-
-      const data = await res.json();
-      return data.secure_url;
-    }
-
-    document.getElementById("sell-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      const title = document.getElementById("title").value;
-      const price = document.getElementById("price").value;
-      const imageFile = document.getElementById("image").files[0];
-
-      if (!imageFile) {
-        alert("Please select an image.");
-        return;
-      }
-
-      try {
-        const imageUrl = await uploadImageToCloudinary(imageFile);
-        const product = {
-          id: "p" + Date.now(),
-          title,
-          price,
-          imageUrl,
-          description: "Test product using Cloudinary"
-        };
-        saveProduct(product);
-        alert("Item listed!");
-        window.location.href = "products.html";
-      } catch (err) {
-        alert("Image upload failed.");
-      }
-    });
-  </script></body>
+  </div>
+</body>
 </html>
