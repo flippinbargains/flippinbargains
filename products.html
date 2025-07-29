@@ -2,96 +2,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Products</title>
+  <title>All Products</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="firebase.js"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import {
-      getFirestore, collection, getDocs, deleteDoc, doc, updateDoc
-    } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-  projectId: "flippinbargains-e8a8a",
-  storageBucket: "flippinbargains-e8a8a.appspot.com",
-  messagingSenderId: "920267203424",
-  appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-  measurementId: "G-03GDHRHYYC"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-const categoryFilter = document.getElementById("categoryFilter");
-const itemsList = document.getElementById("itemsList");
-
-async function displayProducts(category = "") {
-  itemsList.innerHTML = "";
-  const querySnapshot = await getDocs(collection(db, "products"));
-  let count = 0;
-  querySnapshot.forEach((docSnap) => {
-    const product = docSnap.data();
-    if (category && product.category !== category) return;
-    count++;
-    const id = docSnap.id;
-    const item = document.createElement("div");
-    item.className = "bg-white p-4 rounded-xl shadow-md";
-    item.innerHTML = `
-      <h2 class="text-xl font-semibold">${product.title}</h2>
-      <img src="${product.imageUrl}" alt="${product.title}" class="w-full max-h-56 object-cover rounded mt-2" />
-      <p class="text-gray-600 mt-2">${product.description || 'No description provided.'}</p>
-      <div class="text-sm text-gray-500 mt-1">Category: ${product.category || 'General'}</div>
-      <div class="text-sm text-gray-500 mt-1">Price: $${product.price}</div>
-      <div class="flex gap-2 mt-3">
-        <button onclick="deleteProduct('${id}')" class="bg-red-500 text-white px-3 py-1 rounded">Delete</button>
-        <button onclick="editProduct('${id}', '${product.title}', '${product.price}', '${product.category || ''}')" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-      </div>
-    `;
-    itemsList.appendChild(item);
-  });
-  if (count === 0) {
-    itemsList.innerHTML = '<p class="text-center text-gray-500">No items listed.</p>';
-  }
-}
-
-window.deleteProduct = async (id) => {
-  if (confirm("Are you sure you want to delete this product?")) {
-    await deleteDoc(doc(db, "products", id));
-    alert("Deleted");
-    displayProducts(categoryFilter.value);
-  }
-};
-
-window.editProduct = async (id, title, price, category) => {
-  const newTitle = prompt("Edit title:", title);
-  const newPrice = prompt("Edit price:", price);
-  const newCategory = prompt("Edit category:", category);
-  if (newTitle && newPrice) {
-    await updateDoc(doc(db, "products", id), {
-      title: newTitle,
-      price: newPrice,
-      category: newCategory
-    });
-    alert("Updated");
-    displayProducts(categoryFilter.value);
-  }
-};
-
-categoryFilter.addEventListener("change", () => {
-  displayProducts(categoryFilter.value);
-});
-
-displayProducts();
-
-  </script>
 </head>
-<body class="bg-gray-100 min-h-screen px-4 py-8">
-  <div class="max-w-4xl mx-auto">
-    <h1 class="text-3xl font-bold mb-6 text-center text-gray-800">All Listed Products</h1>
-    <div class="mb-4 text-center">
-      <label for="categoryFilter" class="font-medium mr-2">Filter by Category:</label>
-      <select id="categoryFilter" class="border p-2 rounded">
-        <option value="">All</option>
+<body class="bg-gray-100 min-h-screen p-6">
+  <div class="max-w-5xl mx-auto">
+    <h1 class="text-3xl font-bold mb-4 text-center">Product Listings</h1>
+    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-2">
+      <input type="text" id="search" placeholder="Search by title..." class="p-2 border rounded w-full sm:w-1/2" />
+      <select id="categoryFilter" class="p-2 border rounded w-full sm:w-1/4">
+        <option value="">All Categories</option>
         <option value="Electronics">Electronics</option>
         <option value="Clothing">Clothing</option>
         <option value="Toys">Toys</option>
@@ -99,7 +19,76 @@ displayProducts();
         <option value="Home">Home</option>
       </select>
     </div>
-    <div id="itemsList" class="space-y-4"></div>
-  </div>
-</body>
+    <div id="productsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+  </div>  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+      projectId: "flippinbargains-e8a8a",
+      storageBucket: "flippinbargains-e8a8a.appspot.com",
+      messagingSenderId: "920267203424",
+      appId: "1:920267203424:web:d703d051131d8e2d9bb405"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadProducts() {
+      const snapshot = await getDocs(collection(db, "products"));
+      const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderProducts(products);
+    }
+
+    function renderProducts(products) {
+      const list = document.getElementById("productsList");
+      const search = document.getElementById("search").value.toLowerCase();
+      const filter = document.getElementById("categoryFilter").value;
+
+      list.innerHTML = "";
+
+      products
+        .filter(p => (!filter || p.category === filter) && p.title.toLowerCase().includes(search))
+        .forEach(product => {
+          const card = document.createElement("div");
+          card.className = "bg-white p-4 rounded-xl shadow-md";
+          card.innerHTML = `
+            <img src="${product.imageUrl}" alt="${product.title}" class="w-full h-48 object-cover rounded mb-2" />
+            <h2 class="text-xl font-bold">${product.title}</h2>
+            <p class="text-gray-700">$${product.price}</p>
+            <p class="text-sm text-gray-500">Category: ${product.category || 'Uncategorized'}</p>
+            <p class="text-sm text-gray-500">Shipping: ${product.shipping || 'Unknown'}, ${product.weight || '?'} lbs</p>
+            <div class="flex gap-2 mt-3">
+              <button onclick="editProduct('${product.id}', '${product.title}', '${product.price}', '${product.category}')" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
+              <button onclick="deleteProduct('${product.id}')" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+            </div>
+          `;
+          list.appendChild(card);
+        });
+    }
+
+    window.editProduct = async (id, title, price, category) => {
+      const newTitle = prompt("Edit Title:", title);
+      const newPrice = prompt("Edit Price:", price);
+      const newCat = prompt("Edit Category:", category);
+      if (!newTitle || !newPrice || !newCat) return;
+
+      const ref = doc(db, "products", id);
+      await updateDoc(ref, { title: newTitle, price: newPrice, category: newCat });
+      loadProducts();
+    }
+
+    window.deleteProduct = async (id) => {
+      if (confirm("Delete this product?")) {
+        await deleteDoc(doc(db, "products", id));
+        loadProducts();
+      }
+    }
+
+    document.getElementById("search").addEventListener("input", loadProducts);
+    document.getElementById("categoryFilter").addEventListener("change", loadProducts);
+    loadProducts();
+  </script></body>
 </html>
