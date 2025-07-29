@@ -12,7 +12,7 @@
       padding: 20px;
     }
     .container {
-      max-width: 500px;
+      max-width: 600px;
       margin: auto;
       background: white;
       border-radius: 8px;
@@ -25,11 +25,6 @@
       margin: 10px 0;
       padding: 10px;
       font-size: 16px;
-    }
-    img {
-      max-width: 100%;
-      border-radius: 6px;
-      margin-top: 10px;
     }
     .btn-upload {
       background-color: #3f51b5;
@@ -47,6 +42,19 @@
       border-radius: 5px;
       cursor: pointer;
     }
+    .thumbnails {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .thumbnails img {
+      width: 100px;
+      height: auto;
+      border-radius: 5px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+    }
   </style>
 </head>
 <body>
@@ -61,42 +69,48 @@
       <option>Home</option>
       <option>Books</option>
       <option>Jewelry</option>
-      <!-- add more as needed -->
     </select>
     <input type="text" id="shipping" placeholder="Shipping Method (e.g. USPS, FedEx)" />
     <input type="text" id="weight" placeholder="Weight (lbs)" />
-    
-    <button class="btn-upload" id="upload_widget_opener">Upload Image</button>
-    <img id="preview" src="" alt="Image preview will appear here" />
-    <input type="text" id="image_url" readonly placeholder="Uploaded image URL" />
+
+    <button class="btn-upload" id="upload_widget_opener">Upload Images</button>
+    <div class="thumbnails" id="thumbnail_container"></div>
+
+    <input type="hidden" id="image_urls" />
 
     <button class="btn-submit">List Product</button>
   </div>
 
   <script>
-    const cloudName = 'dxbujdqyn'; // ✅ Replace with your actual Cloudinary cloud name
-    const uploadPreset = 'unsigned'; // ✅ Must match your Cloudinary preset
+    const cloudName = 'dxbujdqyn'; // your Cloudinary cloud name
+    const uploadPreset = 'unsigned'; // your Cloudinary upload preset
 
-    const myWidget = cloudinary.createUploadWidget(
+    const uploadedImages = [];
+
+    const widget = cloudinary.createUploadWidget(
       {
-        cloudName,
-        uploadPreset,
+        cloudName: cloudName,
+        uploadPreset: uploadPreset,
         folder: 'products',
-        sources: ['local', 'camera', 'url'],
-        cropping: false,
-        multiple: false,
-        maxFiles: 1,
+        multiple: true,
+        sources: ['local', 'url', 'camera'],
+        maxFiles: 6,
       },
       (error, result) => {
         if (!error && result && result.event === "success") {
-          document.getElementById("preview").src = result.info.secure_url;
-          document.getElementById("image_url").value = result.info.secure_url;
+          const imageUrl = result.info.secure_url;
+          uploadedImages.push(imageUrl);
+          document.getElementById("image_urls").value = JSON.stringify(uploadedImages);
+
+          const imgElement = document.createElement("img");
+          imgElement.src = imageUrl;
+          document.getElementById("thumbnail_container").appendChild(imgElement);
         }
       }
     );
 
     document.getElementById("upload_widget_opener").addEventListener("click", () => {
-      myWidget.open();
+      widget.open();
     }, false);
   </script>
 </body>
