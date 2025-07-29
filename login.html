@@ -1,51 +1,45 @@
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login to FlippinBargains</title>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen flex items-center justify-center">
-  <div class="bg-white p-8 rounded-xl shadow-md w-full max-w-md">
-    <h1 class="text-2xl font-bold mb-6 text-center">Login</h1>
-    <input id="loginEmail" type="email" placeholder="Email" class="w-full mb-4 p-2 border rounded" />
-    <input id="loginPassword" type="password" placeholder="Password" class="w-full mb-4 p-2 border rounded" />
-    <button onclick="loginUser()" class="bg-blue-600 hover:bg-blue-700 text-white w-full py-2 rounded">Login</button>
-    <p class="mt-4 text-center text-sm">Don't have an account? <a href="register.html" class="text-blue-600 underline">Register</a></p>
-  </div>
-
-  <!-- Firebase App and Auth -->
   <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";const firebaseConfig = {
+  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+  projectId: "flippinbargains-e8a8a",
+  storageBucket: "flippinbargains-e8a8a.appspot.com",
+  messagingSenderId: "920267203424",
+  appId: "1:920267203424:web:d703d051131d8e2d9bb405"
+};
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-      projectId: "flippinbargains-e8a8a",
-      storageBucket: "flippinbargains-e8a8a.appspot.com",
-      messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-      measurementId: "G-03GDHRHYYC"
-    };
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+document.getElementById("login-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const email = document.getElementById("email").value;
+  const password = document.getElementById("password").value;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+    window.location.href = "index.html";
+  } catch (error) {
+    alert("Login failed: " + error.message);
+  }
+});
 
-    window.loginUser = function () {
-      const email = document.getElementById("loginEmail").value;
-      const password = document.getElementById("loginPassword").value;
-
-      signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-          alert("Login successful!");
-          window.location.href = "dashboard.html";
-        })
-        .catch((error) => {
-          alert("Login failed: " + error.message);
-        });
-    };
   </script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white p-6 rounded-xl shadow-md w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-4">Login</h1>
+    <form id="login-form" class="space-y-4">
+      <input type="email" id="email" placeholder="Email" required class="w-full p-2 border rounded" />
+      <input type="password" id="password" placeholder="Password" required class="w-full p-2 border rounded" />
+      <button type="submit" class="bg-blue-600 text-white w-full py-2 rounded">Login</button>
+    </form>
+  </div>
 </body>
 </html>
