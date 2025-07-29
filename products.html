@@ -1,131 +1,111 @@
 <!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>All Products</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sell Product</title>
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
   <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 min-h-screen p-6">
-  <div class="max-w-5xl mx-auto">
-    <h1 class="text-3xl font-bold mb-4 text-center">Product Listings</h1>
-    <div class="flex flex-col sm:flex-row justify-between items-center mb-6 gap-2">
-      <input type="text" id="search" placeholder="Search by title..." class="p-2 border rounded w-full sm:w-1/2" />
-      <select id="categoryFilter" class="p-2 border rounded w-full sm:w-1/2">
-        <option value="">All Categories</option>
-        <option>Antiques</option>
-        <option>Art</option>
-        <option>Baby</option>
-        <option>Books</option>
-        <option>Business & Industrial</option>
-        <option>Cameras & Photo</option>
-        <option>Cell Phones & Accessories</option>
-        <option>Clothing, Shoes & Accessories</option>
-        <option>Coins & Paper Money</option>
-        <option>Collectibles</option>
-        <option>Computers/Tablets & Networking</option>
-        <option>Consumer Electronics</option>
-        <option>Crafts</option>
-        <option>Dolls & Bears</option>
-        <option>DVDs & Movies</option>
-        <option>eBay Motors</option>
-        <option>Entertainment Memorabilia</option>
-        <option>Gift Cards & Coupons</option>
-        <option>Health & Beauty</option>
-        <option>Home & Garden</option>
-        <option>Jewelry & Watches</option>
-        <option>Music</option>
-        <option>Musical Instruments & Gear</option>
-        <option>Pet Supplies</option>
-        <option>Pottery & Glass</option>
-        <option>Real Estate</option>
-        <option>Specialty Services</option>
-        <option>Sporting Goods</option>
-        <option>Sports Mem, Cards & Fan Shop</option>
-        <option>Stamps</option>
-        <option>Tickets & Experiences</option>
-        <option>Toys & Hobbies</option>
-        <option>Travel</option>
-        <option>Video Games & Consoles</option>
-        <option>Everything Else</option>
-      </select>
-    </div>
-    <div id="productsList" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
-  </div>  <script type="module">
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
-    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";const firebaseConfig = {
+  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
+  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
+  projectId: "flippinbargains-e8a8a",
+  storageBucket: "flippinbargains-e8a8a.appspot.com",
+  messagingSenderId: "920267203424",
+  appId: "1:920267203424:web:d703d051131d8e2d9bb405"
+};
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-      projectId: "flippinbargains-e8a8a",
-      storageBucket: "flippinbargains-e8a8a.appspot.com",
-      messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:d703d051131d8e2d9bb405"
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+function openCloudinaryWidget(callback) {
+  const widget = cloudinary.createUploadWidget({
+    cloudName: 'dxbujdqyn',
+    uploadPreset: 'unsigned',
+    folder: 'products',
+    sources: ['local', 'camera', 'url'],
+    multiple: false,
+    cropping: false
+  }, (error, result) => {
+    if (!error && result && result.event === "success") {
+      callback(result.info.secure_url);
+    }
+  });
+  widget.open();
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("sell-form");
+  const imageInput = document.getElementById("image_url");
+  const imagePreview = document.getElementById("preview");
+
+  document.getElementById("upload_btn").addEventListener("click", () => {
+    openCloudinaryWidget((url) => {
+      imageInput.value = url;
+      imagePreview.src = url;
+      imagePreview.classList.remove("hidden");
+    });
+  });
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    const title = document.getElementById("title").value;
+    const price = document.getElementById("price").value;
+    const imageUrl = document.getElementById("image_url").value;
+    const category = document.getElementById("category").value;
+    const shipping = document.getElementById("shipping").value;
+    const weight = document.getElementById("weight").value;
+
+    if (!imageUrl) {
+      alert("Please upload an image first.");
+      return;
+    }
+
+    const product = {
+      title,
+      price,
+      imageUrl,
+      category,
+      shipping,
+      weight,
+      description: "User product listing",
+      createdAt: new Date().toISOString()
     };
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-    const auth = getAuth(app);
-
-    async function loadProducts() {
-      const snapshot = await getDocs(collection(db, "products"));
-      const products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      renderProducts(products);
+    try {
+      await addDoc(collection(db, "products"), product);
+      window.location.href = "success.html";
+    } catch (error) {
+      alert("❌ Failed to list product.");
     }
+  });
+});
 
-    function renderProducts(products) {
-      const list = document.getElementById("productsList");
-      const search = document.getElementById("search").value.toLowerCase();
-      const filter = document.getElementById("categoryFilter").value;
-
-      list.innerHTML = "";
-
-      products
-        .filter(p => (!filter || p.category === filter) && p.title.toLowerCase().includes(search))
-        .forEach(product => {
-          const card = document.createElement("div");
-          card.className = "bg-white p-4 rounded-xl shadow-md";
-          card.innerHTML = `
-            <img src="${product.imageUrl}" alt="${product.title}" class="w-full h-48 object-cover rounded mb-2" />
-            <h2 class="text-xl font-bold">${product.title}</h2>
-            <p class="text-gray-700">$${product.price}</p>
-            <p class="text-sm text-gray-500">Category: ${product.category || 'Uncategorized'}</p>
-            <p class="text-sm text-gray-500">Shipping: ${product.shipping || 'Unknown'}, ${product.weight || '?'} lbs</p>
-            <div class="flex gap-2 mt-3">
-              <button onclick="editProduct('${product.id}', '${product.title}', '${product.price}', '${product.category}')" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
-              <button onclick="deleteProduct('${product.id}')" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
-              <button onclick="alert('Reported to admin. Thank you!')" class="bg-gray-300 text-black px-3 py-1 rounded">Report</button>
-            </div>
-          `;
-          list.appendChild(card);
-        });
-    }
-
-    window.editProduct = async (id, title, price, category) => {
-      const newTitle = prompt("Edit Title:", title);
-      const newPrice = prompt("Edit Price:", price);
-      const newCat = prompt("Edit Category:", category);
-      if (!newTitle || !newPrice || !newCat) return;
-
-      const ref = doc(db, "products", id);
-      await updateDoc(ref, { title: newTitle, price: newPrice, category: newCat });
-      loadProducts();
-    }
-
-    window.deleteProduct = async (id) => {
-      if (confirm("Delete this product?")) {
-        await deleteDoc(doc(db, "products", id));
-        loadProducts();
-      }
-    }
-
-    document.getElementById("search").addEventListener("input", loadProducts);
-    document.getElementById("categoryFilter").addEventListener("change", loadProducts);
-
-    onAuthStateChanged(auth, user => {
-      if (user) loadProducts();
-      else window.location.href = "auth_login.html";
-    });
-  </script></body>
+  </script>
+</head>
+<body class="bg-gray-100 p-6">
+  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
+    <h1 class="text-2xl font-bold mb-4">List an Item</h1>
+    <form id="sell-form" class="space-y-4">
+      <input type="text" id="title" placeholder="Title" required class="w-full p-2 border rounded" />
+      <input type="text" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
+      <select id="category" required class="w-full p-2 border rounded">
+        <option value="" disabled selected>Select Category</option>
+        <option value="Electronics">Electronics</option>
+        <option value="Clothing">Clothing</option>
+        <option value="Toys">Toys</option>
+        <option value="Books">Books</option>
+        <option value="Home">Home</option>
+      </select>
+      <input type="text" id="shipping" placeholder="Shipping Method (e.g. USPS, FedEx)" class="w-full p-2 border rounded" />
+      <input type="text" id="weight" placeholder="Weight (lbs)" class="w-full p-2 border rounded" />
+      <input type="hidden" id="image_url" />
+      <button type="button" id="upload_btn" class="bg-blue-600 text-white px-4 py-2 rounded">Upload Image</button>
+      <img id="preview" src="" alt="Preview" class="hidden max-h-48 rounded" />
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">List Product</button>
+    </form>
+  </div>
+</body>
 </html>
