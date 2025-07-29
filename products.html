@@ -23,6 +23,7 @@
   </div>  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
     import { getFirestore, collection, getDocs, deleteDoc, updateDoc, doc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
@@ -35,6 +36,7 @@
 
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    const auth = getAuth(app);
 
     async function loadProducts() {
       const snapshot = await getDocs(collection(db, "products"));
@@ -63,6 +65,7 @@
             <div class="flex gap-2 mt-3">
               <button onclick="editProduct('${product.id}', '${product.title}', '${product.price}', '${product.category}')" class="bg-yellow-500 text-white px-3 py-1 rounded">Edit</button>
               <button onclick="deleteProduct('${product.id}')" class="bg-red-600 text-white px-3 py-1 rounded">Delete</button>
+              <button onclick="alert('Reported to admin. Thank you!')" class="bg-gray-300 text-black px-3 py-1 rounded">Report</button>
             </div>
           `;
           list.appendChild(card);
@@ -89,6 +92,10 @@
 
     document.getElementById("search").addEventListener("input", loadProducts);
     document.getElementById("categoryFilter").addEventListener("change", loadProducts);
-    loadProducts();
+
+    onAuthStateChanged(auth, user => {
+      if (user) loadProducts();
+      else window.location.href = "auth_login.html";
+    });
   </script></body>
 </html>
