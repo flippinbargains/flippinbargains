@@ -1,16 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Flippin Bargains</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FlippinBargains - Home</title>
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-  <h1>Flippin Bargains Homepage</h1>
-  <a href="categories.html">Categories</a> |
-  <a href="sell.html">Start Selling</a> |
-  <a href="login.html">Login</a> |
-  <a href="register.html">Register</a> |
-  <a href="dashboard.html">Dashboard</a>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center text-center px-4">
+  <div class="bg-white rounded-xl shadow-xl p-8 max-w-xl w-full">
+    <h1 class="text-4xl font-bold text-blue-600 mb-4">Welcome to FlippinBargains</h1>
+    <p class="text-gray-700 text-lg mb-6">Buy, sell, and explore amazing deals across all categories.</p>
+    <div class="flex flex-col sm:flex-row justify-center gap-4">
+      <a href="sell.html" class="bg-green-600 text-white px-6 py-3 rounded-lg hover:bg-green-700">Sell an Item</a>
+      <a href="products.html" class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700">Browse Products</a>
+    </div>
+  </div>
 </body>
 </html>
