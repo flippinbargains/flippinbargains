@@ -6,7 +6,7 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";const firebaseConfig = {
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";const firebaseConfig = {
   apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
   authDomain: "flippinbargains-e8a8a.firebaseapp.com",
   projectId: "flippinbargains-e8a8a",
@@ -30,6 +30,17 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
   }
 });
 
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    document.getElementById("logout-btn").classList.remove("hidden");
+  }
+});
+
+document.getElementById("logout-btn").addEventListener("click", async () => {
+  await signOut(auth);
+  window.location.reload();
+});
+
   </script>
 </head>
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
@@ -40,6 +51,11 @@ document.getElementById("login-form").addEventListener("submit", async (e) => {
       <input type="password" id="password" placeholder="Password" required class="w-full p-2 border rounded" />
       <button type="submit" class="bg-blue-600 text-white w-full py-2 rounded">Login</button>
     </form>
+    <p class="text-sm mt-4 text-center">
+      Don't have an account?
+      <a href="signup.html" class="text-blue-500 hover:underline">Sign up here</a>
+    </p>
+    <button id="logout-btn" class="hidden mt-4 bg-red-500 text-white w-full py-2 rounded">Logout</button>
   </div>
 </body>
 </html>
