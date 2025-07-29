@@ -1,111 +1,112 @@
-<!DOCTYPE html><html lang="en">
+<!-- File: sell_product.html -->
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sell Product</title>
-  <script src="https://widget.cloudinary.com/v2.0/global/all.js"></script>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js";const firebaseConfig = {
-  apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-  authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-  projectId: "flippinbargains-e8a8a",
-  storageBucket: "flippinbargains-e8a8a.appspot.com",
-  messagingSenderId: "920267203424",
-  appId: "1:920267203424:web:d703d051131d8e2d9bb405"
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
-function openCloudinaryWidget(callback) {
-  const widget = cloudinary.createUploadWidget({
-    cloudName: 'dxbujdqyn',
-    uploadPreset: 'unsigned',
-    folder: 'products',
-    sources: ['local', 'camera', 'url'],
-    multiple: false,
-    cropping: false
-  }, (error, result) => {
-    if (!error && result && result.event === "success") {
-      callback(result.info.secure_url);
+  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f5f7fa;
+      padding: 20px;
     }
-  });
-  widget.open();
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  const form = document.getElementById("sell-form");
-  const imageInput = document.getElementById("image_url");
-  const imagePreview = document.getElementById("preview");
-
-  document.getElementById("upload_btn").addEventListener("click", () => {
-    openCloudinaryWidget((url) => {
-      imageInput.value = url;
-      imagePreview.src = url;
-      imagePreview.classList.remove("hidden");
-    });
-  });
-
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-
-    const title = document.getElementById("title").value;
-    const price = document.getElementById("price").value;
-    const imageUrl = document.getElementById("image_url").value;
-    const category = document.getElementById("category").value;
-    const shipping = document.getElementById("shipping").value;
-    const weight = document.getElementById("weight").value;
-
-    if (!imageUrl) {
-      alert("Please upload an image first.");
-      return;
+    .form-container {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      max-width: 450px;
+      margin: auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     }
-
-    const product = {
-      title,
-      price,
-      imageUrl,
-      category,
-      shipping,
-      weight,
-      description: "User product listing",
-      createdAt: new Date().toISOString()
-    };
-
-    try {
-      await addDoc(collection(db, "products"), product);
-      window.location.href = "success.html";
-    } catch (error) {
-      alert("❌ Failed to list product.");
+    input, select {
+      width: 100%;
+      margin-bottom: 10px;
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 6px;
+      border: 1px solid #ccc;
     }
-  });
-});
-
-  </script>
+    button {
+      padding: 10px 20px;
+      margin-right: 10px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    #upload_widget_opener {
+      background: #1e40af;
+      color: white;
+    }
+    #submit_product {
+      background: #059669;
+      color: white;
+    }
+    #thumbnail_preview {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .thumb {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 6px;
+      border: 1px solid #ddd;
+    }
+  </style>
 </head>
-<body class="bg-gray-100 p-6">
-  <div class="max-w-xl mx-auto bg-white p-6 rounded-xl shadow">
-    <h1 class="text-2xl font-bold mb-4">List an Item</h1>
-    <form id="sell-form" class="space-y-4">
-      <input type="text" id="title" placeholder="Title" required class="w-full p-2 border rounded" />
-      <input type="text" id="price" placeholder="Price" required class="w-full p-2 border rounded" />
-      <select id="category" required class="w-full p-2 border rounded">
-        <option value="" disabled selected>Select Category</option>
-        <option value="Electronics">Electronics</option>
-        <option value="Clothing">Clothing</option>
-        <option value="Toys">Toys</option>
-        <option value="Books">Books</option>
-        <option value="Home">Home</option>
-      </select>
-      <input type="text" id="shipping" placeholder="Shipping Method (e.g. USPS, FedEx)" class="w-full p-2 border rounded" />
-      <input type="text" id="weight" placeholder="Weight (lbs)" class="w-full p-2 border rounded" />
-      <input type="hidden" id="image_url" />
-      <button type="button" id="upload_btn" class="bg-blue-600 text-white px-4 py-2 rounded">Upload Image</button>
-      <img id="preview" src="" alt="Preview" class="hidden max-h-48 rounded" />
-      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">List Product</button>
-    </form>
+<body>
+  <div class="form-container">
+    <h2>List an Item</h2>
+    <input type="text" placeholder="Title" />
+    <input type="text" placeholder="Price" />
+    <select>
+      <option>Select Category</option>
+      <option>Electronics</option>
+      <option>Fashion</option>
+      <option>Home</option>
+    </select>
+    <input type="text" placeholder="Shipping Method (e.g. USPS, FedEx)" />
+    <input type="text" placeholder="Weight (lbs)" />
+
+    <button id="upload_widget_opener">Upload Image</button>
+    <button id="submit_product">List Product</button>
+
+    <div id="thumbnail_preview"></div>
   </div>
+
+  <script type="text/javascript">
+    const cloudName = 'dxbujdqyn';
+    const uploadPreset = 'unsigned';
+    const folder = 'products';
+    const thumbnailContainer = document.getElementById("thumbnail_preview");
+    const uploadedUrls = [];
+
+    const myWidget = cloudinary.createUploadWidget({
+      cloudName,
+      uploadPreset,
+      folder,
+      multiple: true,
+      maxFiles: 6,
+      sources: ['local', 'camera', 'url']
+    }, (error, result) => {
+      if (!error && result && result.event === "success") {
+        const imageUrl = result.info.secure_url;
+        uploadedUrls.push(imageUrl);
+
+        const img = document.createElement("img");
+        img.src = imageUrl;
+        img.className = "thumb";
+        thumbnailContainer.appendChild(img);
+      }
+    });
+
+    document.getElementById("upload_widget_opener").addEventListener("click", () => {
+      myWidget.open();
+    }, false);
+  </script>
 </body>
 </html>
