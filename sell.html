@@ -1,6 +1,4 @@
-<!-- File: sell.html -->
-<!DOCTYPE html>
-<html lang="en">
+<!-- File: sell.html --><!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>Sell Product</title>
@@ -71,19 +69,16 @@
       <option>Jewelry</option>
     </select>
     <input type="text" id="shipping" placeholder="Shipping Method (e.g. USPS, FedEx)" />
-    <input type="text" id="weight" placeholder="Weight (lbs)" />
+    <input type="text" id="weight" placeholder="Weight (lbs)" /><button class="btn-upload" id="upload_widget_opener">Upload Images</button>
+<div class="thumbnails" id="thumbnail_container"></div>
 
-    <button class="btn-upload" id="upload_widget_opener">Upload Images</button>
-    <div class="thumbnails" id="thumbnail_container"></div>
+<input type="hidden" id="image_urls" />
 
-    <input type="hidden" id="image_urls" />
+<button class="btn-submit">List Product</button>
 
-    <button class="btn-submit">List Product</button>
-  </div>
-
-  <script>
-    const cloudName = 'dxbujdqyn'; // your Cloudinary cloud name
-    const uploadPreset = 'unsigned'; // your Cloudinary upload preset
+  </div>  <script>
+    const cloudName = 'dxbujdqyn';
+    const uploadPreset = 'unsigned';
 
     const uploadedImages = [];
 
@@ -112,6 +107,5 @@
     document.getElementById("upload_widget_opener").addEventListener("click", () => {
       widget.open();
     }, false);
-  </script>
-</body>
+  </script></body>
 </html>
