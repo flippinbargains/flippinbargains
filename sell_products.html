@@ -1,0 +1,35 @@
+<!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sell Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gradient-to-br from-yellow-100 to-yellow-200 min-h-screen">
+  <header class="text-center py-8">
+    <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Treasure Chest Icon" class="w-20 h-20 mx-auto mb-4" />
+    <h1 class="text-3xl font-bold text-yellow-900">Find, Fix & Flip Treasures</h1>
+  </header>  <main class="max-w-xl mx-auto bg-white rounded-2xl shadow-xl p-6">
+    <h2 class="text-xl font-semibold text-center mb-6">List an Item</h2>
+    <form action="#" method="POST" enctype="multipart/form-data" class="space-y-4">
+      <input type="text" name="title" placeholder="Title" required class="w-full p-3 border border-yellow-400 rounded-lg" />
+      <input type="number" name="price" placeholder="Price" required class="w-full p-3 border border-yellow-400 rounded-lg" />
+      <select name="category" class="w-full p-3 border border-yellow-400 rounded-lg" required>
+        <option disabled selected>Select Category</option>
+        <option value="collectibles">Collectibles</option>
+        <option value="tools">Tools</option>
+        <option value="vintage">Vintage</option>
+        <option value="misc">Misc</option>
+      </select>
+      <input type="text" name="shipping" placeholder="Shipping Method (e.g. USPS, FedEx)" required class="w-full p-3 border border-yellow-400 rounded-lg" />
+      <input type="text" name="weight" placeholder="Weight (lbs)" required class="w-full p-3 border border-yellow-400 rounded-lg" />
+      <input type="file" name="image" accept="image/*" required class="w-full" />
+      <div class="text-center">
+        <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-full">
+          📤 Upload Treasure
+        </button>
+      </div>
+    </form>
+  </main>
+</body>
+</html>
