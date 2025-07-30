@@ -12,12 +12,15 @@
     }
     .banner {
       text-align: center;
-      background: url('https://cdn-icons-png.flaticon.com/512/219/219983.png') no-repeat center;
-      background-size: 80px;
-      padding: 2rem 0;
+      padding: 2rem 0 1rem;
       font-size: 1.8rem;
       font-weight: bold;
       color: #4b3832;
+      background: linear-gradient(to bottom right, #fff8dc, #ffebc6);
+      border-bottom: 3px solid #d1a954;
+    }
+    .banner img {
+      margin-bottom: 10px;
     }
     .card {
       box-shadow: 0 0 20px rgba(0, 0, 0, 0.08);
@@ -41,7 +44,10 @@
   </style>
 </head>
 <body>
-  <div class="banner">Find, Fix & Flip Treasures</div>
+  <div class="banner">
+    <img src="https://cdn-icons-png.flaticon.com/512/3468/3468379.png" alt="Treasure Chest" width="80" />
+    <div>Find, Fix & Flip Treasures</div>
+  </div>
   <div class="container py-5">
     <div class="row justify-content-center">
       <div class="col-md-6">
