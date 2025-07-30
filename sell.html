@@ -48,13 +48,11 @@
               <option>Collectibles</option>
             </select>
             <input type="text" class="form-control mb-3" placeholder="Shipping Method (e.g. USPS, FedEx)" id="shipping" required />
-            <input type="number" class="form-control mb-3" placeholder="Weight (lbs)" id="weight" required /><input type="file" class="form-control mb-3" id="imageInput" accept="image/*" required />
+            <input type="number" class="form-control mb-3" placeholder="Weight (lbs)" id="weight" required /><input type="file" class="form-control mb-2" id="imageInput" accept="image/*" required />
+        <button type="button" class="btn btn-secondary mb-3 w-100" onclick="uploadImage()">Browse & Upload Image</button>
         <img id="preview" class="thumbnail-preview" />
 
-        <div class="d-flex justify-content-between">
-          <button type="button" class="btn btn-primary" onclick="uploadImage()">Upload Image</button>
-          <button type="submit" class="btn btn-success">List Product</button>
-        </div>
+        <button type="submit" class="btn btn-success w-100 mt-3">List Product</button>
       </form>
     </div>
   </div>
