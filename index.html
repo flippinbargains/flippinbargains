@@ -1,65 +1,23 @@
 <!DOCTYPE html><html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FlippinBargains</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    body {
-      background: linear-gradient(to right, #fdfcfb, #e2d1c3);
-    }
-    .banner {
-      background: url('https://images.unsplash.com/photo-1549924231-f129b911e442?auto=format&fit=crop&w=1470&q=80') center/cover;
-    }
-    @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
-  }.fade-in { animation: fadeIn 1s ease-in-out forwards; } </style>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FlippinBargains</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" />
+  </head>
+  <body class="bg-gradient-to-b from-amber-100 to-white min-h-screen">
+    <!-- Banner -->
+    <section class="text-center py-12 px-4 bg-yellow-100 rounded-b-3xl shadow-md">
+      <img src="https://cdn-icons-png.flaticon.com/512/3082/3082036.png" alt="Treasure Chest" class="mx-auto w-24 mb-4 animate-bounce">
+      <h1 class="text-4xl font-extrabold text-gray-800">Welcome to FlippinBargains</h1>
+      <p class="mt-2 text-xl text-gray-600">
+        🚜 Unlock the treasures within — flip your next find 💰
+      </p>
+      <div class="mt-6 flex justify-center gap-4">
+        <a href="products.html" class="bg-blue-600 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-blue-700">Browse Products</a>
+        <a href="sell_product.html" class="bg-green-600 text-white px-6 py-2 rounded-full font-semibold shadow hover:bg-green-700">List Item</a>
+      </div>
+    </section><!-- Optionally, include rest of your homepage content here -->
 
-</head>
-<body class="min-h-screen">
-  <header class="banner bg-cover bg-center text-white shadow p-6 flex flex-col sm:flex-row sm:justify-between sm:items-center text-center">
-    <div>
-      <h1 class="text-4xl font-extrabold drop-shadow-md">FlippinBargains</h1>
-      <p class="text-sm italic drop-shadow-sm">Find it. Fix it. Flip it. 🛠️💰</p>
-    </div>
-    <div class="mt-4 sm:mt-0">
-      <span id="welcome-msg" class="text-white font-medium mr-4"></span>
-      <button id="logout-btn" class="hidden bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded">Logout</button>
-    </div>
-  </header>  <main class="p-6 text-center" style="background-image: url('https://cdn.pixabay.com/photo/2014/12/27/15/40/treasure-580226_1280.jpg'); background-size: cover; background-position: center; background-blend-mode: overlay; background-color: rgba(255,255,255,0.85);">
-    <h2 class="text-4xl font-bold text-gray-800 mb-2">Welcome to FlippinBargains</h2>
-    <p class="text-lg text-gray-600 mb-6 flex items-center justify-center gap-2 fade-in">🗳️ Unlock the treasures within — flip your next find 💰</p>
-    <div class="space-x-4">
-      <a href="products.html" class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg transition">Browse Products</a>
-      <a href="sell.html" class="bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-lg transition">List Item</a>
-    </div>
-  </main>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js";
-    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-      projectId: "flippinbargains-e8a8a",
-      storageBucket: "flippinbargains-e8a8a.appspot.com",
-      messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:d703d051131d8e2d9bb405"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-
-    onAuthStateChanged(auth, user => {
-      if (user) {
-        document.getElementById("logout-btn").classList.remove("hidden");
-        document.getElementById("welcome-msg").textContent = `Welcome, ${user.email}`;
-      }
-    });
-
-    document.getElementById("logout-btn").addEventListener("click", async () => {
-      await signOut(auth);
-      window.location.reload();
-    });
-  </script></body>
+  </body>
 </html>
