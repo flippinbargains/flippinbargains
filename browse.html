@@ -1,84 +1,101 @@
-<!DOCTYPE html><html lang="en"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<!-- File: browse.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Browse Treasures</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #fffbe6, #fceabb);
+      font-family: 'Inter', sans-serif;
+      background: #fff5e1;
       margin: 0;
       padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     }
     .banner {
+      background: linear-gradient(to right, #ffe8a3, #ffecc2);
       text-align: center;
-      padding: 30px 20px;
+      padding: 2rem 1rem;
     }
     .banner img {
-      width: 80px;
+      width: 64px;
     }
-    .banner h1 {
-      font-size: 28px;
-      color: #722F37;
+    h1 {
+      font-size: 1.8rem;
+      color: #5a341c;
+      margin: 1rem 0 0;
     }
-    .container {
-      width: 90%;
-      max-width: 1000px;
-      padding: 20px;
+    .subtitle {
+      color: #6b4b2d;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+    }
+    .center {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 1.5rem;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .product-card {
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 40px;
-    }
-    .item-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-      gap: 20px;
-    }
-    .item-card {
-      background: #fafafa;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      padding: 1rem;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       text-align: center;
     }
-    .item-card img {
-      max-width: 100%;
+    .product-card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
       border-radius: 8px;
     }
-    .item-card h3 {
-      margin: 10px 0 5px;
-      font-size: 1.1rem;
+    .product-title {
+      font-weight: 600;
+      margin-top: 0.8rem;
     }
-    .item-card p {
-      margin: 2px 0;
-      font-size: 0.95rem;
-      color: #555;
-    }
-    .item-card .price {
-      color: #10b981;
-      font-weight: bold;
-      margin-top: 6px;
+    .product-price {
+      color: #888;
     }
   </style>
-</head><body>
+</head>
+<body>
+
   <div class="banner">
-    <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Treasure Icon">
-    <h1>Browse Treasures</h1>
-  </div>  <div class="container">
-    <div class="item-grid">
-      <!-- Sample Item -->
-      <div class="item-card">
-        <img src="https://via.placeholder.com/250x180.png?text=Treasure" alt="Item Image">
-        <h3>Vintage Radio</h3>
-        <p>Category: Collectibles</p>
-        <p>Shipping: USPS</p>
-        <p>Weight: 4 lbs</p>
-        <div class="price">$49.99</div>
-      </div>
-      <!-- Repeat for more items dynamically -->
-    </div>
+    <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Treasure Map">
+    <h1>Find, Fix & Flip Treasures</h1>
+    <div class="subtitle">Browse treasures listed by fellow pickers 🧭</div>
   </div>
-</body></html>
+
+  <h2 class="center">Browse Treasures</h2>
+
+  <div class="grid-container">
+    <!-- Placeholder products -->
+    <div class="product-card">
+      <img src="https://via.placeholder.com/240x180?text=Vintage+Radio" alt="Product">
+      <div class="product-title">Vintage Radio</div>
+      <div class="product-price">$45</div>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/240x180?text=Antique+Lamp" alt="Product">
+      <div class="product-title">Antique Lamp</div>
+      <div class="product-price">$70</div>
+    </div>
+    <div class="product-card">
+      <img src="https://via.placeholder.com/240x180?text=Retro+Phone" alt="Product">
+      <div class="product-title">Retro Phone</div>
+      <div class="product-price">$60</div>
+    </div>
+    <!-- Add more product-card blocks dynamically with Supabase later -->
+  </div>
+
+</body>
+</html>
