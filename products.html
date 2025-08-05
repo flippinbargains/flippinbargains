@@ -1,112 +1,55 @@
-<!-- File: sell_product.html -->
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Sell Product</title>
-  <script src="https://widget.cloudinary.com/v2.0/global/all.js" type="text/javascript"></script>
-  <style>
-    body {
-      font-family: sans-serif;
-      background: #f5f7fa;
-      padding: 20px;
-    }
-    .form-container {
-      background: #fff;
-      padding: 20px;
-      border-radius: 12px;
-      max-width: 450px;
-      margin: auto;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    }
-    input, select {
-      width: 100%;
-      margin-bottom: 10px;
-      padding: 10px;
-      font-size: 1em;
-      border-radius: 6px;
-      border: 1px solid #ccc;
-    }
-    button {
-      padding: 10px 20px;
-      margin-right: 10px;
-      font-weight: bold;
-      border: none;
-      border-radius: 6px;
-      cursor: pointer;
-    }
-    #upload_widget_opener {
-      background: #1e40af;
-      color: white;
-    }
-    #submit_product {
-      background: #059669;
-      color: white;
-    }
-    #thumbnail_preview {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 15px;
-    }
-    .thumb {
-      width: 80px;
-      height: 80px;
-      object-fit: cover;
-      border-radius: 6px;
-      border: 1px solid #ddd;
-    }
-  </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Browse Treasures</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body>
-  <div class="form-container">
-    <h2>List an Item</h2>
-    <input type="text" placeholder="Title" />
-    <input type="text" placeholder="Price" />
-    <select>
-      <option>Select Category</option>
-      <option>Electronics</option>
-      <option>Fashion</option>
-      <option>Home</option>
-    </select>
-    <input type="text" placeholder="Shipping Method (e.g. USPS, FedEx)" />
-    <input type="text" placeholder="Weight (lbs)" />
+<body class="bg-yellow-50 min-h-screen">
+  <header class="bg-yellow-100 shadow-md p-4 flex justify-between items-center">
+    <h1 class="text-xl font-bold text-brown-800">FlippinBargains</h1>
+    <nav>
+      <a href="index.html" class="text-blue-600 font-semibold mr-4">Home</a>
+      <a href="auth_login.html" class="text-green-600 font-semibold mr-4">Login</a>
+      <a href="register.html" class="text-purple-600 font-semibold">Register</a>
+    </nav>
+  </header>  <section class="text-center py-10">
+    <img src="https://cdn-icons-png.flaticon.com/512/854/854894.png" class="w-20 mx-auto mb-4" alt="Treasure Icon">
+    <h2 class="text-2xl font-bold text-brown-800">Browse Hidden Treasures</h2>
+    <p class="text-brown-600">Find your next flip-worthy find</p>
+  </section>  <main class="px-4 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pb-20" id="product-list">
+    <!-- Products will load here -->
+  </main>  <script>
+    const supabaseUrl = 'https://ccmiyrptitvqnlenlzrs.supabase.co';
+    const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-    <button id="upload_widget_opener">Upload Image</button>
-    <button id="submit_product">List Product</button>
+    async function loadProducts() {
+      const { data, error } = await supabase.from('products').select('*');
+      const container = document.getElementById('product-list');
 
-    <div id="thumbnail_preview"></div>
-  </div>
-
-  <script type="text/javascript">
-    const cloudName = 'dxbujdqyn';
-    const uploadPreset = 'unsigned';
-    const folder = 'products';
-    const thumbnailContainer = document.getElementById("thumbnail_preview");
-    const uploadedUrls = [];
-
-    const myWidget = cloudinary.createUploadWidget({
-      cloudName,
-      uploadPreset,
-      folder,
-      multiple: true,
-      maxFiles: 6,
-      sources: ['local', 'camera', 'url']
-    }, (error, result) => {
-      if (!error && result && result.event === "success") {
-        const imageUrl = result.info.secure_url;
-        uploadedUrls.push(imageUrl);
-
-        const img = document.createElement("img");
-        img.src = imageUrl;
-        img.className = "thumb";
-        thumbnailContainer.appendChild(img);
+      if (error) {
+        container.innerHTML = `<p class="text-red-500 col-span-full">Error loading products.</p>`;
+        return;
       }
-    });
 
-    document.getElementById("upload_widget_opener").addEventListener("click", () => {
-      myWidget.open();
-    }, false);
-  </script>
-</body>
+      if (!data || data.length === 0) {
+        container.innerHTML = `<p class="text-gray-600 col-span-full">No treasures found.</p>`;
+        return;
+      }
+
+      container.innerHTML = data.map(product => `
+        <div class="bg-white rounded-xl shadow p-4">
+          <img src="${product.image_url}" alt="${product.title}" class="w-full h-48 object-cover rounded-md mb-2">
+          <h3 class="font-semibold text-lg">${product.title}</h3>
+          <p class="text-sm text-gray-600">Category: ${product.category}</p>
+          <p class="text-sm text-gray-600">Price: $${product.price}</p>
+          <p class="text-sm text-gray-500">Ship via: ${product.shipping_method}</p>
+        </div>
+      `).join('');
+    }
+
+    loadProducts();
+  </script></body>
 </html>
