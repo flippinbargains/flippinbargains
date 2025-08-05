@@ -1,6 +1,4 @@
-<!-- File: browse.html -->
-<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html><html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
@@ -67,35 +65,33 @@
     }
   </style>
 </head>
-<body>
-
-  <div class="banner">
+<body>  <div class="banner">
     <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Treasure Map">
     <h1>Find, Fix & Flip Treasures</h1>
-    <div class="subtitle">Browse treasures listed by fellow pickers 🧭</div>
-  </div>
-
-  <h2 class="center">Browse Treasures</h2>
-
-  <div class="grid-container">
-    <!-- Placeholder products -->
-    <div class="product-card">
-      <img src="https://via.placeholder.com/240x180?text=Vintage+Radio" alt="Product">
-      <div class="product-title">Vintage Radio</div>
-      <div class="product-price">$45</div>
-    </div>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/240x180?text=Antique+Lamp" alt="Product">
-      <div class="product-title">Antique Lamp</div>
-      <div class="product-price">$70</div>
-    </div>
-    <div class="product-card">
-      <img src="https://via.placeholder.com/240x180?text=Retro+Phone" alt="Product">
-      <div class="product-title">Retro Phone</div>
-      <div class="product-price">$60</div>
-    </div>
-    <!-- Add more product-card blocks dynamically with Supabase later -->
-  </div>
-
-</body>
+    <div class="subtitle">Browse treasures listed by fellow pickers 🗽</div>
+  </div>  <h2 class="center">Browse Treasures</h2>  <div class="grid-container" id="products">
+    <!-- Products will be rendered here -->
+  </div>  <script>
+    async function loadProducts() {
+      const response = await fetch('https://ccmiyrptitvqnlenlzrs.supabase.co/rest/v1/products?select=*', {
+        headers: {
+          'apikey': 'YOUR_SUPABASE_ANON_KEY',
+          'Authorization': 'Bearer YOUR_SUPABASE_ANON_KEY'
+        }
+      });
+      const products = await response.json();
+      const container = document.getElementById('products');
+      products.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        card.innerHTML = `
+          <img src="${item.image_url}" alt="${item.title}" />
+          <div class="product-title">${item.title}</div>
+          <div class="product-price">$${item.price}</div>
+        `;
+        container.appendChild(card);
+      });
+    }
+    loadProducts();
+  </script></body>
 </html>
