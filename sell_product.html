@@ -1,149 +1,130 @@
-<!DOCTYPE html><html lang="en"><head>
+<!-- sell_product.html --><!DOCTYPE html><html lang="en">
+<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Sell Product</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
   <style>
     body {
-      background: #fef9e7;
-      font-family: Arial, sans-serif;
+      font-family: sans-serif;
+      background: #f7f7f7;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
       margin: 0;
-      padding: 0;
-    }.container {
-  max-width: 500px;
-  margin: 50px auto;
-  background: white;
-  border-radius: 20px;
-  padding: 30px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  text-align: center;
-  color: #4e342e;
-}
-
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 20px;
-}
-
-input,
-select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  border: 2px solid #f4d03f;
-  border-radius: 8px;
-}
-
-#uploadBtn {
-  margin-top: 25px;
-  width: 100%;
-  background-color: #f39c12;
-  color: white;
-  font-weight: bold;
-  border: none;
-  padding: 15px;
-  border-radius: 12px;
-  cursor: pointer;
-}
-
-#uploadBtn:hover {
-  background-color: #e67e22;
-}
-
+      padding: 2rem;
+    }
+    .container {
+      background: #fff8e1;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    label {
+      font-weight: bold;
+      margin-top: 1rem;
+      display: block;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 2px solid goldenrod;
+      border-radius: 6px;
+    }
+    button {
+      background: orange;
+      color: white;
+      font-weight: bold;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      width: 100%;
+    }
   </style>
-</head><body>
+</head>
+<body>
   <div class="container">
     <h2>List an Item</h2>
-    <form id="productForm">
+    <form id="sellForm">
       <label for="title">Title</label>
-      <input type="text" id="title" required /><label for="price">Price ($)</label>
-  <input type="number" id="price" required />
+      <input type="text" id="title" name="title" required /><label for="price">Price ($)</label>
+  <input type="number" id="price" name="price" step="0.01" required />
 
   <label for="category">Category</label>
-  <select id="category" required>
-    <option value="" selected disabled>Select Category</option>
+  <select id="category" name="category" required>
+    <option value="" disabled selected>Select Category</option>
+    <option>Collectibles</option>
+    <option>Tools</option>
+    <option>Vintage</option>
+    <option>Furniture</option>
+    <option>Electronics</option>
   </select>
 
   <label for="carrier">Shipping Carrier</label>
-  <select id="carrier" required>
+  <select id="carrier" name="carrier" required>
     <option value="" disabled selected>Select Carrier</option>
     <option>USPS</option>
     <option>FedEx</option>
     <option>UPS</option>
     <option>DHL</option>
+    <option>Other</option>
   </select>
 
-  <label for="weightLbs">Weight (lbs)</label>
-  <input type="number" id="weightLbs" min="0" step="1" required />
+  <label for="weight_lbs">Weight (lbs)</label>
+  <input type="number" id="weight_lbs" name="weight_lbs" min="0" step="1" />
 
-  <label for="weightOz">Weight (oz)</label>
-  <input type="number" id="weightOz" min="0" step="0.1" required />
+  <label for="weight_oz">Weight (oz)</label>
+  <input type="number" id="weight_oz" name="weight_oz" min="0" step="1" />
 
   <label for="image">Upload Image</label>
-  <input type="file" id="image" accept="image/*" required />
+  <input type="file" id="image" name="image" accept="image/*" />
 
-  <button id="uploadBtn" type="submit">Upload Treasure</button>
+  <button type="submit">Upload Treasure</button>
 </form>
 
   </div>  <script>
-    const supabase = supabase.createClient(
-      'https://ccmiyrptitvqnlenlzrs.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNjbWl5cnB0aXR2cW5sZW5senJzIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTM4NjU0MjMsImV4cCI6MjA2OTQ0MTQyM30.UACzi6ci_80dwjUogOI_pwTWHBxtAzPWZHqH25pnFaQ'
-    );
+    const supabase = supabase.createClient('https://YOUR_PROJECT.supabase.co', 'YOUR_ANON_KEY');
 
-    async function loadCategories() {
-      const { data, error } = await supabase.from('products').select('category', { distinct: true });
-      if (!error && data) {
-        const select = document.getElementById('category');
-        data.forEach(c => {
-          const opt = document.createElement('option');
-          opt.value = c.category;
-          opt.textContent = c.category;
-          select.appendChild(opt);
-        });
-      }
-    }
-
-    loadCategories();
-
-    const form = document.getElementById('productForm');
-
-    form.addEventListener('submit', async (e) => {
+    document.getElementById('sellForm').addEventListener('submit', async (e) => {
       e.preventDefault();
 
       const title = document.getElementById('title').value;
       const price = parseFloat(document.getElementById('price').value);
       const category = document.getElementById('category').value;
       const carrier = document.getElementById('carrier').value;
-      const weightLbs = parseFloat(document.getElementById('weightLbs').value);
-      const weightOz = parseFloat(document.getElementById('weightOz').value);
-      const file = document.getElementById('image').files[0];
+      const weight_lbs = parseInt(document.getElementById('weight_lbs').value || 0);
+      const weight_oz = parseInt(document.getElementById('weight_oz').value || 0);
+      const imageFile = document.getElementById('image').files[0];
 
-      if (!file) return alert('Please select an image.');
+      let image_url = null;
+      if (imageFile) {
+        const { data: imageData, error: imageError } = await supabase.storage
+          .from('images')
+          .upload(`public/${imageFile.name}`, imageFile);
+        if (imageError) {
+          alert('Image upload failed.');
+          return;
+        }
+        image_url = `https://YOUR_PROJECT.supabase.co/storage/v1/object/public/images/${imageFile.name}`;
+      }
 
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${Date.now()}.${fileExt}`;
-      const filePath = `${fileName}`;
-
-      const { error: uploadError } = await supabase.storage
-        .from('images')
-        .upload(filePath, file);
-
-      if (uploadError) return alert('Image upload failed');
-
-      const imageUrl = `https://ccmiyrptitvqnlenlzrs.supabase.co/storage/v1/object/public/images/${filePath}`;
-
-      const { error: insertError } = await supabase.from('products').insert([
-        { title, price, category, carrier, weight_lbs: weightLbs, weight_oz: weightOz, image_url: imageUrl }
+      const { error } = await supabase.from('products').insert([
+        { title, price, category, carrier, weight_lbs, weight_oz, image_url }
       ]);
 
-      if (insertError) return alert('Failed to list item');
-
-      alert('Treasure uploaded successfully!');
-      form.reset();
+      if (error) {
+        alert('Failed to list item.');
+      } else {
+        alert('Item listed successfully!');
+        document.getElementById('sellForm').reset();
+      }
     });
-  </script></body></html>
+  </script></body>
+</html>
