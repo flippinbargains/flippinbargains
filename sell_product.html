@@ -2,99 +2,94 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sell a Product - FlippinBargains</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: linear-gradient(to bottom right, #fff3c4, #ffe9a7);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .banner {
-      text-align: center;
-      padding: 30px 20px;
-    }
-    .banner img {
-      width: 80px;
-    }
-    .banner h1 {
-      font-size: 28px;
-      color: #722F37;
-    }
-    .form-card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      width: 90%;
-      max-width: 400px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-      margin-bottom: 40px;
-    }
-    .form-card h2 {
-      margin-top: 0;
-      text-align: center;
-      color: #333;
-    }
-    input, select {
-      width: 100%;
-      padding: 12px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 8px;
-      font-size: 16px;
-    }
-    .submit-btn {
-      background-color: #FFA500;
-      color: white;
-      font-weight: bold;
-      border: none;
-      padding: 14px;
-      width: 100%;
-      border-radius: 30px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: background 0.3s ease;
-    }
-    .submit-btn:hover {
-      background-color: #ff8800;
-    }
-  </style>
+  <title>Sell Product</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body>
-  <div class="banner">
-    <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="Treasure Chest" />
-    <h1>Find, Fix & Flip Treasures</h1>
-  </div>  <div class="form-card">
-    <h2>List an Item</h2>
-    <form action="#" method="POST" enctype="multipart/form-data">
-      <input type="text" name="title" placeholder="Title" required />
-      <input type="number" step="0.01" name="price" placeholder="Price" required /><select name="category" required>
-    <option value="">Select Category</option>
-    <option value="Collectibles">Collectibles</option>
-    <option value="Tools">Tools</option>
-    <option value="Vintage">Vintage</option>
-    <option value="Misc">Misc</option>
-  </select>
+<body class="bg-light">
+  <div class="container mt-5">
+    <h2 class="text-center mb-4">List an Item</h2>
+    <form id="productForm">
+      <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" class="form-control" id="title" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Price ($)</label>
+        <input type="number" class="form-control" id="price" required>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Category</label>
+        <select class="form-select" id="category" required>
+          <option selected disabled>Select Category</option>
+          <option value="Collectibles">Collectibles</option>
+          <option value="Tools">Tools</option>
+          <option value="Vintage">Vintage</option>
+          <option value="Misc">Misc</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Shipping Method</label>
+        <select class="form-select" id="shipping" required>
+          <option selected disabled>Select Carrier</option>
+          <option>USPS</option>
+          <option>UPS</option>
+          <option>FedEx</option>
+          <option>DHL</option>
+        </select>
+      </div>
+      <div class="mb-3 row">
+        <div class="col">
+          <label class="form-label">Weight (lbs)</label>
+          <input type="number" class="form-control" id="weightLbs" min="0">
+        </div>
+        <div class="col">
+          <label class="form-label">Weight (oz)</label>
+          <input type="number" class="form-control" id="weightOz" min="0">
+        </div>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">Upload Image</label>
+        <input type="file" class="form-control" id="imageFile" accept="image/*" required>
+      </div>
+      <button type="submit" class="btn btn-warning w-100">Upload Treasure</button>
+    </form>
+  </div>  <script>
+    const supabase = supabase.createClient('https://ccmiyrptitvqnlenlzrs.supabase.co', 'YOUR_PUBLIC_ANON_KEY');
 
-  <select name="shipping_method" required>
-    <option value="">Select Shipping Carrier</option>
-    <option value="USPS">USPS</option>
-    <option value="UPS">UPS</option>
-    <option value="FedEx">FedEx</option>
-    <option value="DHL">DHL</option>
-    <option value="OnTrac">OnTrac</option>
-    <option value="Other">Other</option>
-  </select>
+    document.getElementById('productForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
 
-  <input type="text" name="weight" placeholder="Weight (lbs)" required />
-  <input type="file" name="image" accept="image/*" required />
+      const title = document.getElementById('title').value;
+      const price = parseFloat(document.getElementById('price').value);
+      const category = document.getElementById('category').value;
+      const shipping = document.getElementById('shipping').value;
+      const weightLbs = parseFloat(document.getElementById('weightLbs').value || 0);
+      const weightOz = parseFloat(document.getElementById('weightOz').value || 0);
+      const fileInput = document.getElementById('imageFile');
+      const file = fileInput.files[0];
 
-  <button type="submit" class="submit-btn">📦 Upload Treasure</button>
-</form>
+      if (!file) return alert("Please upload an image.");
 
-  </div>
-</body>
+      const { data: imageData, error: imageError } = await supabase.storage.from('product-images').upload(`images/${Date.now()}_${file.name}`, file);
+      if (imageError) return alert('Image upload failed: ' + imageError.message);
+
+      const imageUrl = `https://ccmiyrptitvqnlenlzrs.supabase.co/storage/v1/object/public/product-images/${imageData.path}`;
+
+      const { error } = await supabase.from('products').insert({
+        title,
+        price,
+        category,
+        shipping,
+        weight_lbs: weightLbs,
+        weight_oz: weightOz,
+        image_url: imageUrl
+      });
+
+      if (error) return alert('Product submission failed: ' + error.message);
+
+      alert('Treasure listed successfully!');
+      document.getElementById('productForm').reset();
+    });
+  </script></body>
 </html>
