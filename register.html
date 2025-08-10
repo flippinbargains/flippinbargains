@@ -1,47 +1,95 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Register</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Register - FlippinBargains</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #fff8f2, #ffe6c7);
+    }
+    form {
+      background: #fff;
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    }
+    input {
+      margin-bottom: 1rem;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <h1>Register</h1>
-  <form id="registerForm">
-    <input type="text" id="username" placeholder="Username" required /><br />
-    <input type="email" id="email" placeholder="Email" required /><br />
-    <input type="password" id="password" placeholder="Password" required /><br />
-    <button type="submit">Create Account</button>
-  </form>
-  <p>Already have an account? <a href="login.html">Login</a></p>  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-    const firebaseConfig = {
-      apiKey: "AIzaSyCn2yB_oVrb-st1uosqN8YbjdzGp2EF--o",
-      authDomain: "flippinbargains-e8a8a.firebaseapp.com",
-      projectId: "flippinbargains-e8a8a",
-      storageBucket: "flippinbargains-e8a8a.appspot.com",
-      messagingSenderId: "920267203424",
-      appId: "1:920267203424:web:d703d051131d8e2d9bb405",
-      measurementId: "G-03GDHRHYYC"
-    };
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>FlippinBargains</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="auth_login.html">Login</a></li>
+    </ul>
+  </nav>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
+  <!-- Header -->
+  <header class="container" style="text-align:center; padding: 2rem 1rem;">
+    <h1>Create an Account</h1>
+    <p>Join FlippinBargains and start flipping treasures!</p>
+  </header>
 
-    const form = document.getElementById('registerForm');
-    form.addEventListener('submit', async (e) => {
+  <!-- Registration Form -->
+  <main class="container">
+    <form id="registerForm">
+      <label for="name">Full Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit">Register</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+  </footer>
+
+  <!-- Supabase Registration Script -->
+  <script>
+    const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
+    const supabaseKey = 'YOUR_ANON_KEY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
+
+    document.getElementById('registerForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+
+      const name = document.getElementById('name').value;
       const email = document.getElementById('email').value;
       const password = document.getElementById('password').value;
 
-      try {
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-        alert("Account created successfully!");
-        window.location.href = "dashboard.html";
-      } catch (error) {
-        alert("Error: " + error.message);
+      const { error } = await supabaseClient.auth.signUp({
+        email,
+        password,
+        options: {
+          data: { name }
+        }
+      });
+
+      if (error) {
+        alert('Registration failed: ' + error.message);
+      } else {
+        alert('Registration successful! Please check your email to verify your account.');
+        window.location.href = 'auth_login.html';
       }
     });
-  </script></body>
+  </script>
+
+</body>
 </html>
