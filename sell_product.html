@@ -1,96 +1,98 @@
-<!-- sell_product.html --><!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sell Product</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>List an Item - FlippinBargains</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <style>
     body {
-      font-family: sans-serif;
-      background: #f7f7f7;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-      margin: 0;
-      padding: 2rem;
+      background: linear-gradient(to bottom right, #fff8f2, #ffe6c7);
     }
-    .container {
-      background: #fff8e1;
+    form {
+      background: #fff;
       padding: 2rem;
       border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 400px;
-    }
-    label {
-      font-weight: bold;
-      margin-top: 1rem;
-      display: block;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
     }
     input, select {
-      width: 100%;
-      padding: 0.5rem;
-      margin-top: 0.3rem;
-      border: 2px solid goldenrod;
-      border-radius: 6px;
-    }
-    button {
-      background: orange;
-      color: white;
-      font-weight: bold;
-      border: none;
-      padding: 0.8rem 1.2rem;
-      border-radius: 8px;
-      margin-top: 1.5rem;
-      cursor: pointer;
-      width: 100%;
+      margin-bottom: 1rem;
     }
   </style>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
 <body>
-  <div class="container">
-    <h2>List an Item</h2>
+
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>FlippinBargains</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Browse</a></li>
+      <li><a href="auth_login.html" role="button">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Page Header -->
+  <header class="container" style="text-align: center; padding: 2rem 1rem;">
+    <h1>List an Item</h1>
+    <p>Share your hidden treasure with the world.</p>
+  </header>
+
+  <!-- Form -->
+  <main class="container">
     <form id="sellForm">
       <label for="title">Title</label>
-      <input type="text" id="title" name="title" required /><label for="price">Price ($)</label>
-  <input type="number" id="price" name="price" step="0.01" required />
+      <input type="text" id="title" name="title" required>
 
-  <label for="category">Category</label>
-  <select id="category" name="category" required>
-    <option value="" disabled selected>Select Category</option>
-    <option>Collectibles</option>
-    <option>Tools</option>
-    <option>Vintage</option>
-    <option>Furniture</option>
-    <option>Electronics</option>
-  </select>
+      <label for="price">Price ($)</label>
+      <input type="number" id="price" name="price" step="0.01" required>
 
-  <label for="carrier">Shipping Carrier</label>
-  <select id="carrier" name="carrier" required>
-    <option value="" disabled selected>Select Carrier</option>
-    <option>USPS</option>
-    <option>FedEx</option>
-    <option>UPS</option>
-    <option>DHL</option>
-    <option>Other</option>
-  </select>
+      <label for="category">Category</label>
+      <select id="category" name="category" required>
+        <option value="" disabled selected>Select Category</option>
+        <option>Collectibles</option>
+        <option>Tools</option>
+        <option>Vintage</option>
+        <option>Furniture</option>
+        <option>Electronics</option>
+      </select>
 
-  <label for="weight_lbs">Weight (lbs)</label>
-  <input type="number" id="weight_lbs" name="weight_lbs" min="0" step="1" />
+      <label for="carrier">Shipping Carrier</label>
+      <select id="carrier" name="carrier" required>
+        <option value="" disabled selected>Select Carrier</option>
+        <option>USPS</option>
+        <option>FedEx</option>
+        <option>UPS</option>
+        <option>DHL</option>
+        <option>Other</option>
+      </select>
 
-  <label for="weight_oz">Weight (oz)</label>
-  <input type="number" id="weight_oz" name="weight_oz" min="0" step="1" />
+      <label for="weight_lbs">Weight (lbs)</label>
+      <input type="number" id="weight_lbs" name="weight_lbs" min="0" step="1">
 
-  <label for="image">Upload Image</label>
-  <input type="file" id="image" name="image" accept="image/*" />
+      <label for="weight_oz">Weight (oz)</label>
+      <input type="number" id="weight_oz" name="weight_oz" min="0" step="1">
 
-  <button type="submit">Upload Treasure</button>
-</form>
+      <label for="image">Upload Image</label>
+      <input type="file" id="image" name="image" accept="image/*">
 
-  </div>  <script>
-    const supabase = supabase.createClient('https://YOUR_PROJECT.supabase.co', 'YOUR_ANON_KEY');
+      <button type="submit">Upload Treasure</button>
+    </form>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+  </footer>
+
+  <!-- Supabase Script -->
+  <script>
+    const supabaseUrl = 'https://YOUR_PROJECT.supabase.co';
+    const supabaseKey = 'YOUR_ANON_KEY';
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     document.getElementById('sellForm').addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -105,18 +107,18 @@
 
       let image_url = null;
       if (imageFile) {
-        const { data: imageData, error: imageError } = await supabase.storage
+        const { error: imageError } = await supabaseClient.storage
           .from('images')
           .upload(`public/${imageFile.name}`, imageFile);
         if (imageError) {
           alert('Image upload failed.');
           return;
         }
-        image_url = `https://YOUR_PROJECT.supabase.co/storage/v1/object/public/images/${imageFile.name}`;
+        image_url = `${supabaseUrl}/storage/v1/object/public/images/${imageFile.name}`;
       }
 
-      const { error } = await supabase.from('products').insert([
-        { title, price, category, carrier, weight_lbs, weight_oz, image_url }
+      const { error } = await supabaseClient.from('products').insert([
+        { title, price, category, shipping_method: carrier, weight_lbs, weight_oz, image_url }
       ]);
 
       if (error) {
@@ -126,5 +128,7 @@
         document.getElementById('sellForm').reset();
       }
     });
-  </script></body>
+  </script>
+
+</body>
 </html>
