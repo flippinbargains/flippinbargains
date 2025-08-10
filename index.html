@@ -1,96 +1,96 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>FlippinBargains</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      background: linear-gradient(to bottom right, #fef9f5, #ffe6c7);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100vh;
+      background: linear-gradient(to bottom right, #fff8f2, #ffe6c7);
+    }
+    header {
       text-align: center;
+      padding: 2rem 1rem;
     }
-    .banner {
-      background-image: url('https://cdn-icons-png.flaticon.com/512/854/854878.png');
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center;
-      width: 100px;
-      height: 100px;
-      margin: 0 auto 20px;
+    header img {
+      width: 80px;
+      margin-bottom: 1rem;
     }
-    h1 {
-      font-size: 2rem;
-      color: #3b2f2f;
-      margin: 10px 0;
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+      margin-top: 2rem;
     }
-    p {
-      font-size: 1rem;
-      color: #5a4e4e;
-      margin-bottom: 30px;
-    }
-    .btn-group {
-      display: flex;
-      gap: 20px;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .btn {
-      padding: 12px 20px;
-      font-size: 1rem;
-      border: none;
+    .product-card {
+      border: 1px solid #eee;
       border-radius: 8px;
-      cursor: pointer;
-      transition: background 0.3s ease;
+      overflow: hidden;
+      background: #fff;
+      text-align: center;
+      padding: 1rem;
+      transition: transform 0.2s ease;
     }
-    .browse {
-      background-color: #3b82f6;
-      color: white;
+    .product-card:hover {
+      transform: translateY(-4px);
     }
-    .browse:hover {
-      background-color: #2563eb;
-    }
-    .list {
-      background-color: #10b981;
-      color: white;
-    }
-    .list:hover {
-      background-color: #059669;
-    }
-    .auth-links {
-      margin-top: 20px;
-      font-size: 0.9rem;
-    }
-    .auth-links a {
-      margin: 0 10px;
-      color: #4b5563;
-      text-decoration: none;
-    }
-    .auth-links a:hover {
-      text-decoration: underline;
+    .product-card img {
+      max-width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
     }
   </style>
 </head>
 <body>
-  <div class="banner"></div>
-  <h1>Welcome to FlippinBargains</h1>
-  <p>
-    🧹 Unlock the treasures within — flip your next find 💰
-  </p>
-  <div class="btn-group">
-    <a href="products.html" class="btn browse">Browse Products</a>
-    <a href="sell_product.html" class="btn list">List Item</a>
-  </div>
-  <div class="auth-links">
-    <a href="auth_login.html">Login</a> |
-    <a href="register.html">Register</a>
-  </div>
+
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>FlippinBargains</strong></li>
+    </ul>
+    <ul>
+      <li><a href="products.html">Browse</a></li>
+      <li><a href="sell_product.html">List Item</a></li>
+      <li><a href="auth_login.html" role="button">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <header>
+    <img src="https://cdn-icons-png.flaticon.com/512/854/854878.png" alt="FlippinBargains Logo">
+    <h1>Unlock the treasures within — flip your next find 💰</h1>
+    <p>Buy and sell unique items with ease. Your next bargain is just a click away.</p>
+    <a href="products.html" role="button" class="contrast">Start Browsing</a>
+  </header>
+
+  <!-- Featured Products -->
+  <main class="container">
+    <h2>Featured Deals</h2>
+    <div class="product-grid">
+      <div class="product-card">
+        <img src="https://source.unsplash.com/400x300/?electronics" alt="Electronics">
+        <h3>Wireless Headphones</h3>
+        <p>$50 • Like New</p>
+      </div>
+      <div class="product-card">
+        <img src="https://source.unsplash.com/400x300/?furniture" alt="Furniture">
+        <h3>Wooden Coffee Table</h3>
+        <p>$80 • Vintage</p>
+      </div>
+      <div class="product-card">
+        <img src="https://source.unsplash.com/400x300/?fashion" alt="Fashion">
+        <h3>Designer Handbag</h3>
+        <p>$120 • Excellent Condition</p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+  </footer>
+
 </body>
 </html>
