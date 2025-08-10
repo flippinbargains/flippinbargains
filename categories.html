@@ -1,68 +1,115 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Shop by Category</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Categories - FlippinBargains</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
   <style>
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9f9f9;
-      margin: 0;
-      padding: 2rem;
-      text-align: center;
+      background: linear-gradient(to bottom right, #fff8f2, #ffe6c7);
     }
-    h1 {
-      font-size: 2rem;
-      font-weight: 600;
-      margin-bottom: 2rem;
-    }
-    .categories {
+    .category-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
-      max-width: 800px;
-      margin: 0 auto;
     }
-    .category {
-      background-color: #ffffff;
+    .category-card {
+      background: #fff;
+      border-radius: 10px;
       padding: 1rem;
-      border-radius: 0.75rem;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-      font-size: 1rem;
-      font-weight: 500;
-      text-decoration: none;
-      color: #333;
-      transition: background-color 0.2s ease;
+      text-align: center;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+      transition: transform 0.2s ease;
     }
-    .category:hover {
-      background-color: #f0f0f0;
+    .category-card:hover {
+      transform: translateY(-4px);
+    }
+    .category-card img {
+      max-width: 100px;
+      margin-bottom: 0.5rem;
     }
   </style>
 </head>
 <body>
-  <h1>Browse Categories</h1>
-  <div class="categories">
-    <a href="products.html?category=electronics" class="category">Electronics</a>
-    <a href="products.html?category=clothing" class="category">Clothing</a>
-    <a href="products.html?category=home-garden" class="category">Home & Garden</a>
-    <a href="products.html?category=collectibles" class="category">Collectibles</a>
-    <a href="products.html?category=sports" class="category">Sports</a>
-    <a href="products.html?category=handmade" class="category">Handmade</a>
-    <a href="products.html?category=jewelry" class="category">Jewelry</a>
-    <a href="products.html?category=auto-parts" class="category">Auto Parts</a>
-    <a href="products.html?category=health-beauty" class="category">Health & Beauty</a>
-    <a href="products.html?category=books" class="category">Books</a>
-    <a href="products.html?category=video-games" class="category">Video Games</a>
-    <a href="products.html?category=toys" class="category">Toys</a>
-    <a href="products.html?category=pet-supplies" class="category">Pet Supplies</a>
-    <a href="products.html?category=business-industrial" class="category">Business & Industrial</a>
-    <a href="products.html?category=cellphones-accessories" class="category">Cell Phones & Accessories</a>
-    <a href="products.html?category=computers-tablets" class="category">Computers & Tablets</a>
-    <a href="products.html?category=travel" class="category">Travel</a>
-    <a href="products.html?category=cameras-photo" class="category">Cameras & Photo</a>
-    <a href="products.html?category=baby" class="category">Baby</a>
-    <a href="products.html?category=music" class="category">Music</a>
-  </div>
+
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>FlippinBargains</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="products.html">Browse</a></li>
+      <li><a href="categories.html">Categories</a></li>
+      <li><a href="auth_login.html" role="button">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header -->
+  <header class="container" style="text-align:center; padding: 2rem 1rem;">
+    <h1>Shop by Category</h1>
+    <p>Find treasures by type</p>
+  </header>
+
+  <!-- Categories -->
+  <main class="container">
+    <div class="category-grid">
+      <a class="category-card" href="products.html?category=Electronics">
+        <img src="https://cdn-icons-png.flaticon.com/512/1040/1040230.png" alt="Electronics">
+        <h3>Electronics</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Home%20%26%20Garden">
+        <img src="https://cdn-icons-png.flaticon.com/512/2822/2822989.png" alt="Home & Garden">
+        <h3>Home & Garden</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Clothing">
+        <img src="https://cdn-icons-png.flaticon.com/512/892/892458.png" alt="Clothing">
+        <h3>Clothing, Shoes & Accessories</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Collectibles">
+        <img src="https://cdn-icons-png.flaticon.com/512/820/820374.png" alt="Collectibles">
+        <h3>Collectibles & Art</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Sporting%20Goods">
+        <img src="https://cdn-icons-png.flaticon.com/512/2965/2965567.png" alt="Sporting Goods">
+        <h3>Sporting Goods</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Toys">
+        <img src="https://cdn-icons-png.flaticon.com/512/2752/2752348.png" alt="Toys">
+        <h3>Toys & Hobbies</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Health%20%26%20Beauty">
+        <img src="https://cdn-icons-png.flaticon.com/512/3081/3081559.png" alt="Health & Beauty">
+        <h3>Health & Beauty</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Motors">
+        <img src="https://cdn-icons-png.flaticon.com/512/3202/3202926.png" alt="Motors">
+        <h3>Motors</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Business">
+        <img src="https://cdn-icons-png.flaticon.com/512/2933/2933245.png" alt="Business">
+        <h3>Business & Industrial</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Music">
+        <img src="https://cdn-icons-png.flaticon.com/512/727/727245.png" alt="Music">
+        <h3>Music, Movies & Media</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Jewelry">
+        <img src="https://cdn-icons-png.flaticon.com/512/2731/2731758.png" alt="Jewelry">
+        <h3>Jewelry & Watches</h3>
+      </a>
+      <a class="category-card" href="products.html?category=Pets">
+        <img src="https://cdn-icons-png.flaticon.com/512/616/616408.png" alt="Pets">
+        <h3>Pet Supplies</h3>
+      </a>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+  </footer>
+
 </body>
 </html>
