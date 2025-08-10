@@ -1,55 +1,106 @@
-<!DOCTYPE html><html lang="en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Browse Treasures</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Browse Treasures - FlippinBargains</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+  <style>
+    body {
+      background: linear-gradient(to bottom right, #fff8f2, #ffe6c7);
+    }
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem;
+    }
+    .product-card {
+      border: 1px solid #eee;
+      border-radius: 8px;
+      overflow: hidden;
+      background: #fff;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-4px);
+    }
+    .product-card img {
+      max-width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 4px;
+    }
+  </style>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 </head>
-<body class="bg-yellow-50 min-h-screen">
-  <header class="bg-yellow-100 shadow-md p-4 flex justify-between items-center">
-    <h1 class="text-xl font-bold text-brown-800">FlippinBargains</h1>
-    <nav>
-      <a href="index.html" class="text-blue-600 font-semibold mr-4">Home</a>
-      <a href="auth_login.html" class="text-green-600 font-semibold mr-4">Login</a>
-      <a href="register.html" class="text-purple-600 font-semibold">Register</a>
-    </nav>
-  </header>  <section class="text-center py-10">
-    <img src="https://cdn-icons-png.flaticon.com/512/854/854894.png" class="w-20 mx-auto mb-4" alt="Treasure Icon">
-    <h2 class="text-2xl font-bold text-brown-800">Browse Hidden Treasures</h2>
-    <p class="text-brown-600">Find your next flip-worthy find</p>
-  </section>  <main class="px-4 grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto pb-20" id="product-list">
-    <!-- Products will load here -->
-  </main>  <script>
+<body>
+
+  <!-- Navigation -->
+  <nav class="container-fluid">
+    <ul>
+      <li><strong>FlippinBargains</strong></li>
+    </ul>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="sell_product.html">List Item</a></li>
+      <li><a href="auth_login.html" role="button">Login</a></li>
+    </ul>
+  </nav>
+
+  <!-- Header Section -->
+  <header class="container" style="text-align: center; padding: 2rem 1rem;">
+    <img src="https://cdn-icons-png.flaticon.com/512/854/854894.png" alt="Treasure Icon" style="width:80px; margin-bottom: 1rem;">
+    <h1>Browse Hidden Treasures</h1>
+    <p>Find your next flip-worthy find.</p>
+  </header>
+
+  <!-- Products -->
+  <main class="container">
+    <div class="product-grid" id="product-list">
+      <p>Loading products...</p>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="container">
+    <small><a href="#">Privacy Policy</a> • <a href="#">Terms of Service</a></small>
+  </footer>
+
+  <!-- Supabase Script -->
+  <script>
     const supabaseUrl = 'https://ccmiyrptitvqnlenlzrs.supabase.co';
     const supabaseKey = 'YOUR_SUPABASE_ANON_KEY';
-    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+    const supabaseClient = supabase.createClient(supabaseUrl, supabaseKey);
 
     async function loadProducts() {
-      const { data, error } = await supabase.from('products').select('*');
+      const { data, error } = await supabaseClient.from('products').select('*');
       const container = document.getElementById('product-list');
 
       if (error) {
-        container.innerHTML = `<p class="text-red-500 col-span-full">Error loading products.</p>`;
+        container.innerHTML = `<p style="color: red;">Error loading products.</p>`;
         return;
       }
 
       if (!data || data.length === 0) {
-        container.innerHTML = `<p class="text-gray-600 col-span-full">No treasures found.</p>`;
+        container.innerHTML = `<p>No treasures found.</p>`;
         return;
       }
 
       container.innerHTML = data.map(product => `
-        <div class="bg-white rounded-xl shadow p-4">
-          <img src="${product.image_url}" alt="${product.title}" class="w-full h-48 object-cover rounded-md mb-2">
-          <h3 class="font-semibold text-lg">${product.title}</h3>
-          <p class="text-sm text-gray-600">Category: ${product.category}</p>
-          <p class="text-sm text-gray-600">Price: $${product.price}</p>
-          <p class="text-sm text-gray-500">Ship via: ${product.shipping_method}</p>
+        <div class="product-card">
+          <img src="${product.image_url}" alt="${product.title}">
+          <h3>${product.title}</h3>
+          <p><small>Category: ${product.category}</small></p>
+          <p><strong>$${product.price}</strong></p>
+          <p><small>Ship via: ${product.shipping_method}</small></p>
         </div>
       `).join('');
     }
 
     loadProducts();
-  </script></body>
+  </script>
+
+</body>
 </html>
